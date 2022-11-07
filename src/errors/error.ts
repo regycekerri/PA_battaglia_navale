@@ -45,11 +45,61 @@ class InvalidTokenError implements ErrorI {
     }
 }
 
+class InvalidGameModeError implements ErrorI {
+    getStatus(): number {
+        return 400;
+    }
+    getMsg(): string {
+        return "Bad Request - Game mode must be: 0 (player vs ia), 1 (player vs player) or 2 (player vs player vs player)";
+    }
+}
+
+class InvalidNumberOfEmailsError implements ErrorI {
+    getStatus(): number {
+        return 400;
+    }
+    getMsg(): string {
+        return "Bad Request - The emails do not conform to the game mode"
+    }
+}
+
+class InvalidGridSizeError implements ErrorI {
+    getStatus(): number {
+        return 400;
+    }
+    getMsg(): string {
+        return "Bad Request - Grid size must be a number between 5 and 15"
+    }
+}
+
+class InvalidNumberOfShipsError implements ErrorI {
+    getStatus(): number {
+        return 400;
+    }
+    getMsg(): string {
+        return "Bad Request - Number of ships must be a number between 1 and half the size of the grid"
+    }
+}
+
+class InvalidMaximumShipSizeError implements ErrorI {
+    getStatus(): number {
+        return 400;
+    }
+    getMsg(): string {
+        return "Bad Request - Maximum ship size must be a number between 1 and 3"
+    }
+}
+
 export enum ErrorEnum {
     MalformedPayload,
     NoAuthHeader,
     NoToken,
-    InvalidToken
+    InvalidToken,
+    InvalidGameMode,
+    InvalidNumberOfEmails,
+    InvalidGridSize,
+    InvalidNumberOfShips,
+    InvalidMaximumShipSize,
 }
 
 /**
@@ -73,9 +123,23 @@ export class ErrorFactory {
             case(ErrorEnum.InvalidToken):
                 error = new InvalidTokenError();
                 break;
+            case(ErrorEnum.InvalidGameMode):
+                error = new InvalidGameModeError();
+                break;
+            case(ErrorEnum.InvalidNumberOfEmails):
+                error = new InvalidNumberOfEmailsError();
+                break;
+            case(ErrorEnum.InvalidGridSize):
+                error = new InvalidGridSizeError();
+                break;
+            case(ErrorEnum.InvalidNumberOfShips):
+                error = new InvalidNumberOfShipsError();
+                break;
+            case(ErrorEnum.InvalidMaximumShipSize):
+                error = new InvalidMaximumShipSizeError();
+                break;
         }
 
         return error;
     }
-
 }
