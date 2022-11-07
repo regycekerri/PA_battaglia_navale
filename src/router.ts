@@ -1,6 +1,8 @@
 import * as express from 'express';
 import { ErrorEnum, ErrorFactory } from './errors/error';
-import * as RequestMiddleware from './middleware/request_middleware';
+import * as AuthMiddleware from './middleware/auth_middleware';
+import * as RouteMiddleware from './middleware/route_middleware';
+import * as ControllerMiddleware from './middleware/controller_middleware';
 
 const app = express();
 
@@ -24,9 +26,21 @@ app.use((err: Error, req: any, res: any, next: any) => {
 });
  */
 app.post('/create_game',
-    RequestMiddleware.checkAuthHeader,
-    RequestMiddleware.checkToken,
-    RequestMiddleware.verifyAndAuthenticate
+    AuthMiddleware.checkAuthHeader,
+    AuthMiddleware.checkToken,
+    AuthMiddleware.verifyAndAuthenticate,
+    RouteMiddleware.checkCreateGamePayload,
+    RouteMiddleware.checkGameMode,
+    RouteMiddleware.checkNumberOfEmails,
+    RouteMiddleware.checkGridSize,
+    RouteMiddleware.checkNumberOfShips,
+    RouteMiddleware.checkMaximumShipSize,
 );
+
+export const create_event = [
+    RouteMiddleware.checkUserExistence,
+    RouteMiddleware.checkDatetimes,
+    RouteMiddleware.checkUserBalance
+];
 
 app.listen(8080);
