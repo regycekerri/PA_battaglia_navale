@@ -18,8 +18,38 @@ class MalformedPayloadError implements ErrorI {
     }
 }
 
+class NoAuthHeaderError implements ErrorI {
+    getStatus(): number {
+        return 400;
+    }
+    getMsg(): string {
+        return "Bad Request - No authorization header"
+    }
+}
+
+class NoTokenError implements ErrorI {
+    getStatus(): number {
+        return 400;
+    }
+    getMsg(): string {
+        return "Bad Request - No JWT";
+    }
+}
+
+class InvalidTokenError implements ErrorI {
+    getStatus(): number {
+        return 403;
+    }
+    getMsg(): string {
+        return "Forbidden - Invalid JWT (the key is incorrect)"
+    }
+}
+
 export enum ErrorEnum {
-    MalformedPayload
+    MalformedPayload,
+    NoAuthHeader,
+    NoToken,
+    InvalidToken
 }
 
 /**
@@ -33,6 +63,15 @@ export class ErrorFactory {
         switch(type) {
             case(ErrorEnum.MalformedPayload):
                 error = new MalformedPayloadError();
+                break;
+            case(ErrorEnum.NoAuthHeader):
+                error = new NoAuthHeaderError();
+                break;
+            case(ErrorEnum.NoToken):
+                error = new NoTokenError();
+                break;
+            case(ErrorEnum.InvalidToken):
+                error = new InvalidTokenError();
                 break;
         }
 
