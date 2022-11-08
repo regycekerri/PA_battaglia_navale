@@ -1,4 +1,5 @@
 DROP TABLE IF EXISTS user;
+DROP TABLE IF EXISTS event;
 
 CREATE TABLE user (
   email VARCHAR(30) NOT NULL,
@@ -9,6 +10,35 @@ CREATE TABLE user (
   PRIMARY KEY (email),
   UNIQUE (username)
 );
+
+CREATE TABLE game (
+  id INT NOT NULL AUTO_INCREMENT,
+  player1 VARCHAR(30) NOT NULL,
+  player2 VARCHAR(30),
+  player3 VARCHAR(30),
+  ia BOOLEAN NOT NULL,
+  grid1 VARCHAR(65535) NOT NULL,
+  grid2 VARCHAR(65535),
+  grid3 VARCHAR(65535),
+  gridIA VARCHAR(65535),
+  attaccante VARCHAR(30),
+  difensore VARCHAR(30),
+  in_progress BOOLEAN NOT NULL,
+  vincitore VARCHAR(30),
+  perdente1 VARCHAR(30),
+  perdente2 VARCHAR(30),
+  start_date DATE NOT NULL,
+  end_date DATE,
+  PRIMARY KEY (id),
+  FOREIGN KEY (player1) REFERENCES user(email),
+  FOREIGN KEY (player2) REFERENCES user(email),
+  FOREIGN KEY (player3) REFERENCES user(email),
+  FOREIGN KEY (attaccante) REFERENCES user(email),
+  FOREIGN KEY (difensore) REFERENCES user(email),
+  FOREIGN KEY (vincitore) REFERENCES user(email),
+  FOREIGN KEY (perdente1) REFERENCES user(email),
+  FOREIGN KEY (perdente2) REFERENCES user(email)
+)
 
 INSERT INTO user (email, username, role, playing, token) VALUES
   ('adriano.mancini@gmail.com', 'Adriano', 'admin', FALSE, 100.00),
