@@ -23,6 +23,10 @@ export const User = connection.define('user', {
         type: DataTypes.STRING(10),
         allowNull: false
     },
+    playing: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false
+    },
     token: {
         type: DataTypes.DOUBLE(25,2),
         allowNull: false
