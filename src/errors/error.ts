@@ -90,6 +90,42 @@ class InvalidMaximumShipSizeError implements ErrorI {
     }
 }
 
+class InternalServerError implements ErrorI {
+    getStatus(): number {
+        return 500;
+    }
+    getMsg(): string {
+        return "Internal Server Error - Something went wrong with the database";
+    }
+}
+
+class NotExistingUserError implements ErrorI {
+    getStatus(): number {
+        return 404;
+    }
+    getMsg(): string {
+        return "Not Found - The given user/users doesn't/don't exist"
+    }
+}
+
+class InsufficientTokensError implements ErrorI {
+    getStatus(): number {
+        return 401;
+    }
+    getMsg(): string {
+        return "Unauthorized - Insufficient tokens";
+    }
+}
+
+class AlreadyPlayingError implements ErrorI {
+    getStatus(): number {
+        return 401;
+    }
+    getMsg(): string {
+        return "Unauthorized - The given user/users is/are already playing in another game"
+    }
+}
+
 export enum ErrorEnum {
     MalformedPayload,
     NoAuthHeader,
@@ -100,6 +136,10 @@ export enum ErrorEnum {
     InvalidGridSize,
     InvalidNumberOfShips,
     InvalidMaximumShipSize,
+    InternalServer,
+    NotExistingUser,
+    InsufficientTokens,
+    AlreadyPlaying,
 }
 
 /**
@@ -137,6 +177,18 @@ export class ErrorFactory {
                 break;
             case(ErrorEnum.InvalidMaximumShipSize):
                 error = new InvalidMaximumShipSizeError();
+                break;
+            case(ErrorEnum.InternalServer):
+                error = new InternalServerError();
+                break;
+            case(ErrorEnum.NotExistingUser):
+                error = new NotExistingUserError();
+                break;
+            case(ErrorEnum.InsufficientTokens):
+                error = new InsufficientTokensError();
+                break;
+            case(ErrorEnum.AlreadyPlaying):
+                error = new AlreadyPlayingError();
                 break;
         }
 
