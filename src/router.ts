@@ -3,6 +3,7 @@ import { ErrorEnum, ErrorFactory } from './errors/error';
 import * as AuthMiddleware from './middleware/auth_middleware';
 import * as RouteMiddleware from './middleware/route_middleware';
 import * as ControllerMiddleware from './middleware/controller_middleware';
+import * as ErrorHandlerMiddleware from './middleware/error_handling_middleware';
 
 const app = express();
 
@@ -19,11 +20,6 @@ app.use((err: Error, req: any, res: any, next: any) => {
 
 /**
  * Rotta di tipo POST che consente di creare una partita tramite token JWT.
- * 
- * ESEMPIO DA SEGUIRE:
- * app.post('/create-event', Middleware.create_event, Middleware.error_handling, function (req: any, res: any) {    
-    Controller.createEvent(req.body, res);
-});
  */
 app.post('/create_game',
     AuthMiddleware.checkAuthHeader,
@@ -35,12 +31,13 @@ app.post('/create_game',
     RouteMiddleware.checkGridSize,
     RouteMiddleware.checkNumberOfShips,
     RouteMiddleware.checkMaximumShipSize,
+    ControllerMiddleware.checkUsersExistence,
+    ControllerMiddleware.checkUsersTokens,
+    ControllerMiddleware.checkUsersState,
+    ErrorHandlerMiddleware.errorHandler,
+    (req: any, res: any) => {
+        Controller.createGame(req.body, res);
+    }
 );
-
-export const create_event = [
-    RouteMiddleware.checkUserExistence,
-    RouteMiddleware.checkDatetimes,
-    RouteMiddleware.checkUserBalance
-];
 
 app.listen(8080);
