@@ -1,3 +1,6 @@
+import { Grid } from './grid/Grid';
+import { GridBuilder } from './grid/gridbuilder';
+import { getRandomInt } from './grid/utility';
 import { User, Game } from './orm';
 
 /**
@@ -34,25 +37,36 @@ export async function createGame(body: any): Promise<any> {
     const email1: string = body.email1;
     const email2: string = body.email2;
     const email3: string = body.email3;
+    
+    const grid_size: number = body.grid_size;
+    const number_of_ships: number = body.number_of_ships;
+    let dimensions: number[];
+    const maximum_ship_size: number = body.maximum_ship_size;
 
-    //Da sistemare
-    let grid_player1: any;
+    for(let i = 0; i < number_of_ships; i++) {
+        dimensions.push(getRandomInt(1, maximum_ship_size));
+    }
+
+    let grid_player1: Grid = new GridBuilder(grid_size, number_of_ships, maximum_ship_size)
+                                            .makeShips(dimensions)
+                                            .build();
 
     let today_date: Date = new Date();
 
     if(game_mode === 0){
-        //Da sistemare
-        let grid_IA: any;
+        let grid_IA: Grid = new GridBuilder(grid_size, number_of_ships, maximum_ship_size)
+                                          .makeShips(dimensions)
+                                          .build();
 
         Game.create({
             player1: email1,
             player2: null,
             player3: null,
             ia: true,
-            grid1: grid_player1,
+            grid1: JSON.stringify(grid_player1),
             grid2: null,
             grid3: null,
-            gridIA: grid_IA,
+            gridIA: JSON.stringify(grid_IA),
             attaccante: email1,
             difensore: "ia",
             in_progress: true,
@@ -63,16 +77,17 @@ export async function createGame(body: any): Promise<any> {
             end_date: null
         });
     } else if(game_mode === 1) {
-        //Da sistemare
-        let grid_player2: any;
+        let grid_player2: Grid = new GridBuilder(grid_size, number_of_ships, maximum_ship_size)
+                                               .makeShips(dimensions)
+                                               .build();
 
         Game.create({
             player1: email1,
             player2: email2,
             player3: null,
             ia: false,
-            grid1: grid_player1,
-            grid2: grid_player2,
+            grid1: JSON.stringify(grid_player1),
+            grid2: JSON.stringify(grid_player2),
             grid3: null,
             gridIA: null,
             attaccante: email1,
@@ -85,18 +100,21 @@ export async function createGame(body: any): Promise<any> {
             end_date: null
         });
     } else {
-        //Da sistemare
-        let grid_player2: any;
-        let grid_player3: any;
+        let grid_player2: Grid = new GridBuilder(grid_size, number_of_ships, maximum_ship_size)
+                                                .makeShips(dimensions)
+                                                .build();
+        let grid_player3: Grid = new GridBuilder(grid_size, number_of_ships, maximum_ship_size)
+                                                .makeShips(dimensions)
+                                                .build();
 
         return Game.create({
             player1: email1,
             player2: email2,
             player3: email3,
             ia: false,
-            grid1: grid_player1,
-            grid2: grid_player2,
-            grid3: grid_player3,
+            grid1: JSON.stringify(grid_player1),
+            grid2: JSON.stringify(grid_player2),
+            grid3: JSON.stringify(grid_player3),
             gridIA: null,
             attaccante: email1,
             difensore: email2,
