@@ -1,0 +1,30 @@
+version: '3.7'
+services:
+    dbmysql:
+        image: mysql
+        restart: always
+        environment:
+          - MYSQL_ROOT_PASSWORD=root
+          - MYSQL_DATABASE=battleship
+          - MYSQL_USER=user
+          - MYSQL_PASSWORD=password
+        ports:
+          - 3306:3306
+        volumes:
+          - ./seeding:/docker-entrypoint-initdb.d        
+    node:
+        build: .
+        restart: always
+        ports:
+          - 8080:8080
+        environment:
+          - MYSQL_ROOT_PASSWORD=root
+          - MYSQL_DATABASE=battleship
+          - MYSQL_HOST=dbmysql
+          - MYSQL_PORT=3306
+          - MYSQL_USER=user
+          - MYSQL_PASSWORD=password
+        env_file:
+          - .env
+        depends_on:
+          - dbmysql
