@@ -37,7 +37,6 @@ import * as jwt from 'jsonwebtoken';
     try {
         let decoded = jwt.verify(req.token, process.env.SECRET_KEY);
         if (decoded !== null) {
-            //req.user potrebbe essere un'alternativa
             req.body = decoded;
             next();
         } else {

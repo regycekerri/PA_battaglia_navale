@@ -1,4 +1,4 @@
-import { Grid } from './grid/Grid';
+import { Grid } from './grid/grid';
 import { GridBuilder } from './grid/gridbuilder';
 import { getRandomInt } from './grid/utility';
 import { User, Game } from './orm';

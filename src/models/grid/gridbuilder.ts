@@ -1,4 +1,4 @@
-import { Grid } from "./Grid";
+import { Grid } from "./grid";
 import { getRandomInt } from "./utility";
 
 /**
