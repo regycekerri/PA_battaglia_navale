@@ -58,7 +58,7 @@ export async function createGame(body: any): Promise<any> {
                                           .makeShips(dimensions)
                                           .build();
 
-        Game.create({
+        return Game.create({
             player1: email1,
             player2: null,
             player3: null,
@@ -81,7 +81,7 @@ export async function createGame(body: any): Promise<any> {
                                                .makeShips(dimensions)
                                                .build();
 
-        Game.create({
+        return Game.create({
             player1: email1,
             player2: email2,
             player3: null,
