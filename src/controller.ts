@@ -6,9 +6,9 @@ import { SuccessEnum, SuccessFactory } from "./responses/success";
  * Funzione che verifica se gli utenti specificati all'atto di creazione di una partita esistono o meno.
  */
  export async function checkIfUsersExist(game_mode: number, email1: string, email2: string, email3: string, res: any): Promise<boolean> {
-    let check1: any;
-    let check2: any;
-    let check3: any;
+    let check1: boolean;
+    let check2: boolean;
+    let check3: boolean;
     let check: boolean = false;
 
     try {
@@ -33,7 +33,7 @@ import { SuccessEnum, SuccessFactory } from "./responses/success";
 }
 
 /**
- * Funzione che verifica se gli utenti specificati all'atto di creazione di una partita esistono o meno.
+ * Funzione che verifica se gli utenti specificati all'atto di creazione di una partita abbiano i token necessari.
  */
  export async function checkIfUsersHaveTokens(game_mode: number, email1: string, email2: string, email3: string, res: any): Promise<boolean> {
     let tokens1: number;
@@ -101,30 +101,40 @@ export function createGame(body: any, res: any): void {
     const email1: string = body.email1;
     const email2: string = body.email2;
     const email3: string = body.email3;
-
-    Model.createGame(body).then((game) => {
-        if(game_mode === 0) {
-            Model.decreaseTokens(email1, 0.4);
-        } else if(game_mode === 1) {
-            Model.decreaseTokens(email1, 0.4);
-            Model.decreaseTokens(email2, 0.4);
-        } else {
-            Model.decreaseTokens(email1, 0.4);
-            Model.decreaseTokens(email2, 0.4);
-            Model.decreaseTokens(email3, 0.4);
-        }
-        const successFactory = new SuccessFactory();
-        const success = successFactory.getSuccess(SuccessEnum.GameCreated);
-        res.status(success.getStatus).json({
-            message: success.getMsg,
-            id_game: game.id,
-            player1: game.player1,
-            player2: game.player2,
-            player3: game.player3
-        });
-    }).catch((error) => {
+    
+    try {
+        Model.createGame(body).then((game) => {
+            if(game_mode === 0) {
+                Model.decreaseTokens(email1, 0.4);
+                Model.setUserState(email1, true);
+            } else if(game_mode === 1) {
+                Model.decreaseTokens(email1, 0.4);
+                Model.decreaseTokens(email2, 0.4);
+                Model.setUserState(email1, true);
+                Model.setUserState(email2, true);
+            } else {
+                Model.decreaseTokens(email1, 0.4);
+                Model.decreaseTokens(email2, 0.4);
+                Model.decreaseTokens(email3, 0.4);
+                Model.setUserState(email1, true);
+                Model.setUserState(email2, true);
+                Model.setUserState(email3, true);
+            }
+            const successFactory = new SuccessFactory();
+            const success = successFactory.getSuccess(SuccessEnum.GameCreated);
+            res.status(success.getStatus).json({
+                message: success.getMsg,
+                id_game: game.id,
+                player1: game.player1,
+                player2: game.player2,
+                player3: game.player3,
+                ia: game.ia
+            })
+        })
+    } catch(error) {
+        console.log(error);
         generateControllerErrors(ErrorEnum.InternalServer, error, res);
-    })
+    }
 }
 
 /**

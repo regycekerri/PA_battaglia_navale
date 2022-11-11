@@ -9,15 +9,6 @@ interface ErrorI {
     getMsg(): string;
 }
 
-class MalformedPayloadError implements ErrorI {
-    getStatus(): number {
-        return 400;
-    }
-    getMsg(): string {
-        return "Bad Request - Malformed payload";
-    }
-}
-
 class NoAuthHeaderError implements ErrorI {
     getStatus(): number {
         return 400;
@@ -108,6 +99,15 @@ class NotExistingUserError implements ErrorI {
     }
 }
 
+class MatchingUsersError implements ErrorI {
+    getStatus(): number {
+        return 400;
+    }
+    getMsg(): string {
+        return "Bad Request - The given user/users must be different"
+    }
+}
+
 class InsufficientTokensError implements ErrorI {
     getStatus(): number {
         return 401;
@@ -127,7 +127,6 @@ class AlreadyPlayingError implements ErrorI {
 }
 
 export enum ErrorEnum {
-    MalformedPayload,
     NoAuthHeader,
     NoToken,
     InvalidToken,
@@ -138,6 +137,7 @@ export enum ErrorEnum {
     InvalidMaximumShipSize,
     InternalServer,
     NotExistingUser,
+    MatchingUsers,
     InsufficientTokens,
     AlreadyPlaying,
 }
@@ -151,9 +151,6 @@ export class ErrorFactory {
         let error: ErrorI;
 
         switch(type) {
-            case(ErrorEnum.MalformedPayload):
-                error = new MalformedPayloadError();
-                break;
             case(ErrorEnum.NoAuthHeader):
                 error = new NoAuthHeaderError();
                 break;
@@ -183,6 +180,9 @@ export class ErrorFactory {
                 break;
             case(ErrorEnum.NotExistingUser):
                 error = new NotExistingUserError();
+                break;
+            case(ErrorEnum.MatchingUsers):
+                error = new MatchingUsersError();
                 break;
             case(ErrorEnum.InsufficientTokens):
                 error = new InsufficientTokensError();

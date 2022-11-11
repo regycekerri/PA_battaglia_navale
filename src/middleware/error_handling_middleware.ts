@@ -6,5 +6,8 @@ import { ErrorFactory } from "../responses/error";
 export function errorHandler(err: any, req: any, res: any, next: any): void {
     const errorFactory = new ErrorFactory();
     const error = errorFactory.getError(err);
-    res.status(error.getStatus()).json(error.getMsg());
+    res.status(error.getStatus()).json({
+        "status": error.getStatus(),
+        "error": error.getMsg()
+    });
 }

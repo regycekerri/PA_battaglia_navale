@@ -1,26 +1,26 @@
+USE battleship;
+
 DROP TABLE IF EXISTS user;
-DROP TABLE IF EXISTS event;
+DROP TABLE IF EXISTS game;
 
 CREATE TABLE user (
-  email VARCHAR(30) NOT NULL,
-  username VARCHAR(20) NOT NULL,
+  email VARCHAR(30) PRIMARY KEY,
+  username VARCHAR(20) UNIQUE NOT NULL,
   role VARCHAR(10) NOT NULL,
   playing BOOLEAN NOT NULL,
-  token DOUBLE(25,2) NOT NULL, 
-  PRIMARY KEY (email),
-  UNIQUE (username)
+  token DOUBLE(25,2) NOT NULL
 );
 
 CREATE TABLE game (
-  id INT NOT NULL AUTO_INCREMENT,
+  id INT PRIMARY KEY AUTO_INCREMENT,
   player1 VARCHAR(30) NOT NULL,
   player2 VARCHAR(30),
   player3 VARCHAR(30),
   ia BOOLEAN NOT NULL,
-  grid1 VARCHAR(65535) NOT NULL,
-  grid2 VARCHAR(65535),
-  grid3 VARCHAR(65535),
-  gridIA VARCHAR(65535),
+  grid1 TEXT NOT NULL,
+  grid2 TEXT,
+  grid3 TEXT,
+  gridIA TEXT,
   attaccante VARCHAR(30),
   difensore VARCHAR(30),
   in_progress BOOLEAN NOT NULL,
@@ -29,7 +29,6 @@ CREATE TABLE game (
   perdente2 VARCHAR(30),
   start_date DATE NOT NULL,
   end_date DATE,
-  PRIMARY KEY (id),
   FOREIGN KEY (player1) REFERENCES user(email),
   FOREIGN KEY (player2) REFERENCES user(email),
   FOREIGN KEY (player3) REFERENCES user(email),
@@ -38,7 +37,7 @@ CREATE TABLE game (
   FOREIGN KEY (vincitore) REFERENCES user(email),
   FOREIGN KEY (perdente1) REFERENCES user(email),
   FOREIGN KEY (perdente2) REFERENCES user(email)
-)
+);
 
 INSERT INTO user (email, username, role, playing, token) VALUES
   ('adriano.mancini@gmail.com', 'Adriano', 'admin', FALSE, 100.00),

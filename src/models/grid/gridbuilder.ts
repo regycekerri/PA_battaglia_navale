@@ -53,6 +53,7 @@ export class GridBuilder {
                     break;
             }
         }
+        console.log(JSON.stringify(this.grid));
         return this;
     }
 
@@ -66,13 +67,14 @@ export class GridBuilder {
         let doable: boolean;
 
         do {
+            console.log("1");
             doable = true;
             x = getRandomInt(0, this.grid_size - 1);
             y = getRandomInt(0, this.grid_size - 1);
 
             for(let i = (x - 1); i <= (x + 1); i++) {
                 for(let j = (y - 1); y <= (y + 1); j++) {
-                    if((i >= 0) && (i <= this.grid_size - 1) && (j >= 0) && (j <= this.grid_size)) {
+                    if((i >= 0) && (i <= this.grid_size - 1) && (j >= 0) && (j <= this.grid_size - 1)) {
                         if(this.grid[i][j].type !== 0) {
                             doable = false;
                         }
@@ -99,6 +101,7 @@ export class GridBuilder {
         let direction: number = getRandomInt(0, 1);
 
         do {
+            console.log("2");
             doable = true;
             x1 = getRandomInt(0, this.grid_size - 1);
             y1 = getRandomInt(0, this.grid_size - 1);
@@ -113,7 +116,7 @@ export class GridBuilder {
 
                 for(let i = (x1 - 1); i <= (x1 + 1); i++) {
                     for(let j = (y1 - 1); j <= (y1 + 2); j++) {
-                        if((i >= 0) && (i <= this.grid_size - 1) && (j >= 0) && (j <= this.grid_size)) {
+                        if((i >= 0) && (i <= this.grid_size - 1) && (j >= 0) && (j <= this.grid_size - 1)) {
                             if(this.grid[i][j].type !== 0) {
                                 doable = false;
                             }
@@ -130,7 +133,7 @@ export class GridBuilder {
 
                 for(let i = (x1 - 1); i <= (x1 + 2); i++) {
                     for(let j = (y1 - 1); j <= (y1 + 1); j++) {
-                        if((i >= 0) && (i <= this.grid_size - 1) && (j >= 0) && (j <= this.grid_size)) {
+                        if((i >= 0) && (i <= this.grid_size - 1) && (j >= 0) && (j <= this.grid_size -1)) {
                             if(this.grid[i][j].type !== 0) {
                                 doable = false;
                             }
@@ -160,6 +163,7 @@ export class GridBuilder {
         let direction: number = getRandomInt(0, 1);
 
         do {
+            console.log("3");
             doable = true;
             x1 = getRandomInt(0, this.grid_size - 1);
             y1 = getRandomInt(0, this.grid_size - 1);
@@ -177,7 +181,7 @@ export class GridBuilder {
 
                 for(let i = (x1 - 1); i <= (x1 + 1); i++) {
                     for(let j = (y1 - 1); j <= (y1 + 3); j++) {
-                        if((i >= 0) && (i <= this.grid_size - 1) && (j >= 0) && (j <= this.grid_size)) {
+                        if((i >= 0) && (i <= this.grid_size - 1) && (j >= 0) && (j <= this.grid_size - 1)) {
                             if(this.grid[i][j].type !== 0) {
                                 doable = false;
                             }
@@ -197,7 +201,7 @@ export class GridBuilder {
 
                 for(let i = (x1 - 1); i <= (x1 + 3); i++) {
                     for(let j = (y1 - 1); j <= (y1 + 1); j++) {
-                        if((i >= 0) && (i <= this.grid_size - 1) && (j >= 0) && (j <= this.grid_size)) {
+                        if((i >= 0) && (i <= this.grid_size - 1) && (j >= 0) && (j <= this.grid_size - 1)) {
                             if(this.grid[i][j].type !== 0) {
                                 doable = false;
                             }

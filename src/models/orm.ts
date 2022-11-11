@@ -62,17 +62,17 @@ export const Game = connection.define('game', {
         allowNull: false
     },
     grid1: {
-        type: DataTypes.STRING(65535),
+        type: DataTypes.TEXT,
         allowNull: false
     },
     grid2: {
-        type: DataTypes.STRING(65535)
+        type: DataTypes.TEXT
     },
     grid3: {
-        type: DataTypes.STRING(65535)
+        type: DataTypes.TEXT
     },
     gridIA: {
-        type: DataTypes.STRING(65535)
+        type: DataTypes.TEXT
     },
     attaccante: {
         type: DataTypes.STRING(30)

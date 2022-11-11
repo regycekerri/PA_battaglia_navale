@@ -11,7 +11,7 @@
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "jsonwebtoken": "^8.5.1",
-    "mysql2": "3.0.0-rc.1", 
+    "mysql2": "3.0.0-rc.1",
     "sequelize": "^6.25.4",
     "typescript": "^4.8.4"
   },

@@ -6,9 +6,13 @@ import { User, Game } from './orm';
 /**
  * Funzione che verifica l'esistenza di un utente nel database, data la sua email.
  */
- export async function checkIfUserExists(email: string): Promise<any> {
+ export async function checkIfUserExists(email: string): Promise<boolean> {
     let check: any = await User.findByPk(email, {raw: true});
-    return check;
+    if(check) {
+        return true;
+    } else {
+        return false;
+    };
 }
 
 /**
@@ -20,7 +24,7 @@ export async function getUserTokens(email: string): Promise<number> {
 }
 
 /**
- * Funzione che verifica che un utente sta giocando o meno.
+ * Funzione che verifica se un utente sta giocando o meno.
  */
 export async function isUserPlaying(email: string): Promise<boolean> {
     let user: any = await User.findByPk(email, {raw: true});
@@ -40,7 +44,7 @@ export async function createGame(body: any): Promise<any> {
     
     const grid_size: number = body.grid_size;
     const number_of_ships: number = body.number_of_ships;
-    let dimensions: number[];
+    let dimensions: number[] = [];
     const maximum_ship_size: number = body.maximum_ship_size;
 
     for(let i = 0; i < number_of_ships; i++) {
@@ -134,5 +138,14 @@ export async function createGame(body: any): Promise<any> {
  export async function decreaseTokens(email: string, payment: number): Promise<any> {
     let user: any = await User.findByPk(email, {raw: true});
     user.token = user.token - payment;
-    await user.save();
+    user.save();
+}
+
+/**
+ * Funzione che imposta lo stato di un utente, data la sua email.
+ */
+export async function setUserState(email: string, playing: boolean) {
+    let user: any = await User.findByPk(email, {raw: true});
+    user.playing = playing;
+    user.save();
 }
