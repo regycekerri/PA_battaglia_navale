@@ -4,30 +4,67 @@
 1. [Introduzione](#introduzione)
 2. [Avvio tramite docker](#docker)
 3. [Richieste](#rotte)
-    1. [Sottotilo](#sottotilo)
+    1. [Collection](#collection)
 4. [Diagrammi UML](#diagrammi)
     1. [Diagramma 1](#diagramma1)
     2. [Diagramma 2](#diagramma2)
-5. [Software utilizzati](#software)
-6. [Autori](#autori)
+5. [Pattern utilizzati](#pattern)
+    1. [Chain of Responsability](#cor)
+    2. [Factory](#factory)
+    3. [Singleton](#singleton)
+    4. [Builder](#builder)
+6. [Software utilizzati](#software)
+7. [Autori](#autori)
 
-# Introduzione <a name="introduzione"></a>
-> Token disponibili dal sito dei token [JWT](https://jwt.io).
+## Introduzione <a name="introduzione"></a>
+> L'obbiettivo del progetto è realizzare un sistema che consenta di gestire il gioco della battaglia navale. 
+> 
+> In particolare, il sistema deve prevedere la possibilità di far interagire 2 o 3 utenti oppure un utente contro l'elaboratore.
+>
+> Gli utenti per poter partecipare ad una partita devono autentificarsi tramite [JWT](https://jwt.io) e devono avere almeno 0.40 token. Ad ogni mossa di un giocatore vengono addebitati 0.10 token a ciascuno. Tuttavia, durante una partita, anche se il credito (valore iniziale impostato nel seed del database) scende sotto lo zero si può continuare a giocare.
+>
+> Ci possono essere più partite attive nello stesso momento ma un utente può partecipare ad una ed una sola partita.
 
-# Avvio tramite Docker <a name="docker"></a>
-> Il sistema
+***
 
-# Richieste <a name="rotte"></a>
-| Tipo         | Rotte         | Descrizione   |
-| ------------ |---------------|---------------|
-|   ```GET```  | /mossa |Ammissibile o no.|
-|   ```GET```  | /stato |Di che turno è, terminata, vincitore...|
-|   ```GET```  | /storico |Storico mosse.|
-|   ```GET```  | /statistiche |Numero partite vinte/perse, totale giocate, numero minimo/medio/massimo e dvstd delle mosse, filtraggio per date.|
+## Avvio tramite Docker <a name="docker"></a>
+> L'avvio del sistema prevede l'utilizzo di [docker](https://www.docker.com/products/docker-desktop/) e un API testing come ad esempio [postman](https://www.postman.com/downloads/) per effetture le chiamate al fine di testare il progetto.
+>
+> Il sistema si può avviare tramite docker-compose dopo aver fatto la clone dell'attuale [repository](https://github.com/regycekerri/PA_battaglia_navale) sulla macchina locale.
+>
+> Dopo aver fatto ciò, tramite il prompt dei comandi, bisogna entrare nella cartella tramite il comando ```cd directory_della_repository``` e poi avviare docker tramite ```docker-compose up``` .
+>
+> Il client si interfaccerà con il servizio tramite postman che sarà in ascolto sulla porta 8080 di un webserver generato da Docker, il quale comporrà due container, rispettivamente eseguiti a partire da un'immagine Node.js e da un'immagine MySQL.
+>
+> Prima di avviare il servizio è necessario memorizzarare la chiava privata da usare lato back-end in un file ```.env``` all'interno della cartella della repository.
+
+***
+
+## Richieste <a name="rotte"></a>
+
+Le richieste elencate di seguito possono essere testate attraverso ```http://localhost:8080/nome_della_richiesta``` .
+
+| Tipo         | Rotte         | Descrizione   | JWT |
+| ------------ |---------------|---------------|---------|
+|   ```POST``` | /create_game  | Richiesta che permette di creare una partita| SI |
+|   ```POST``` | /make_move    | Richiesta che consente di effettuare una mossa| SI |
+|   ```POST``` | /state_game   | Richiesta che consente di valutare lo stato di una partita| SI |
+|   ```POST``` | /history      | Richiesta che restituisce lo storico delle mosse di una data partita con la possibilità di esportare in CSV| SI |
+|   ```POST``` | /stats        | Richiesta che restituisce le statistiche di un utente con la possibilità di filtrare per date| SI |
+|   ```POST``` | /users        | Richiesta che restituisce la classifica dei giocatori| NO |
+|   ```POST``` | /admin        | Richiesta che consente all'utente con ruolo admin di effettuare la ricarica dei token di un utente| SI |
 
 > **Note:** Note...
 
-# Diagrammi UML <a name="diagrammi"></a>
+***
+
+### Collection <a name="collection"></a>
+
+É possibile eseguire una serie di test predefiniti importando all'interno di Postman la [collection]() situata all'interno di tale repository. 
+
+***
+
+## Diagrammi UML <a name="diagrammi"></a>
 
 ### Diagramma 1 <a name="diagramma1"></a>
 
@@ -37,8 +74,36 @@
 
 ***
 
+## Pattern utilizzati <a name="pattern"></a>
+
+### Chain of Responsability (CoR) <a name="cor"></a>
+
+> La CoR fa parte dei Behavioural Design Pattern e permette di processare una richiesta attraverso l'esecuzione di una catena di funzioni collegate tra loro (handler). Tale pattern è stato realizzato tramite le funzionalità dei middleware i quali rappresentano gli elementi effettivi della catena. In particolare, dopo aver fatto una richiesta, si eseguono in cascata tutti i middleware relativi a quella richiesta e in caso di successo la chiamata viene portata a termine.
+L'utlizzo di questa catena fa si che ogni handler della catena effettui un singolo controllo e che trasmetta la richiesta al successivo handler. In questo modo il codice è semplificato e si risparmia del tempo perchè se uno dei ceck non va a buon fine la chiamata restituisce subito l'errore evitando i controlli successivi.
+L'implentazione degli handler è visualizzabile nella seguente cartella [middleware]().
+
+*** 
+
+### Factory <a name="factory"></a>
+
+***
+
+### Singleton <a name="singleton"></a>
+
+***
+
+### Builder <a name="builder"></a>
+
+***
+
 # Software utilizzati <a name="software"></a>
-> 
+> * [Visual Studio Code](https://code.visualstudio.com/) - Ambiente di sviluppo
+> * [Docker](https://www.docker.com/) - Gestore di container
+> * [Postman](https://www.postman.com/) - Software per l'API Testing 
+> * [Visual Paradigm](https://www.visual-paradigm.com/) - Software per la generazione dei diagrammi UML
+
+***
 
 # Autori <a name="autori"></a>
-> 
+> * Regy Cekerri
+> * Davide Malatesta
