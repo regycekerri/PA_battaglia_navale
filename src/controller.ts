@@ -96,30 +96,33 @@ import { SuccessEnum, SuccessFactory } from "./responses/success";
  * Funzione che crea una partita sulla base delle specifiche fornite.
  * In caso di successo, vengono decrementati i token dei giocatori e la risposta restituita conferma la creazione.
  */
-export function createGame(body: any, res: any): void {
+export async function createGame(body: any, res: any): Promise<void> {
     const game_mode: number = body.game_mode;
     const email1: string = body.email1;
     const email2: string = body.email2;
     const email3: string = body.email3;
-    
+
     try {
-        Model.createGame(body).then((game) => {
+        let game: any = await Model.createGame(body);
+
+        if(game) {
             if(game_mode === 0) {
-                Model.decreaseTokens(email1, 0.4);
-                Model.setUserState(email1, true);
+                await Model.decreaseTokens(email1, 0.4);
+                await Model.setUserState(email1, true);
             } else if(game_mode === 1) {
-                Model.decreaseTokens(email1, 0.4);
-                Model.decreaseTokens(email2, 0.4);
-                Model.setUserState(email1, true);
-                Model.setUserState(email2, true);
+                await Model.decreaseTokens(email1, 0.4);
+                await Model.decreaseTokens(email2, 0.4);
+                await Model.setUserState(email1, true);
+                await Model.setUserState(email2, true);
             } else {
-                Model.decreaseTokens(email1, 0.4);
-                Model.decreaseTokens(email2, 0.4);
-                Model.decreaseTokens(email3, 0.4);
-                Model.setUserState(email1, true);
-                Model.setUserState(email2, true);
-                Model.setUserState(email3, true);
+                await Model.decreaseTokens(email1, 0.4);
+                await Model.decreaseTokens(email2, 0.4);
+                await Model .decreaseTokens(email3, 0.4);
+                await Model.setUserState(email1, true);
+                await Model.setUserState(email2, true);
+                await Model.setUserState(email3, true);
             }
+    
             const successFactory = new SuccessFactory();
             const success = successFactory.getSuccess(SuccessEnum.GameCreated);
             res.status(success.getStatus()).json({
@@ -129,10 +132,11 @@ export function createGame(body: any, res: any): void {
                 player2: game.player2,
                 player3: game.player3,
                 ia: game.ia
-            })
-        })
+         })
+        } else {
+            throw new Error();
+        }
     } catch(error) {
-        console.log(error);
         generateControllerErrors(ErrorEnum.InternalServer, error, res);
     }
 }

@@ -25,8 +25,8 @@ app.post('/create_game',
     ControllerMiddleware.checkUsersTokens,
     ControllerMiddleware.checkUsersState,
     ErrorHandlerMiddleware.errorHandler,
-    (req: any, res: any) => {
-        Controller.createGame(req.body, res);
+    async (req: any, res: any) => {
+        await Controller.createGame(req.body, res);
     }
 );
 
