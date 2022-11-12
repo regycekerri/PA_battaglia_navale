@@ -41,26 +41,27 @@ export class GridBuilder {
      */
     makeShips(dimensions: number[]) {
         for(let i = 0; i < dimensions.length; i++) {
-            switch(dimensions[i]) {
-                case(1):
-                    this.makeShipOfSize1();
-                    break;
-                case(2):
-                    this.makeShipOfSize2();
-                    break;
-                case(3):
-                    this.makeShipOfSize3();
-                    break;
+            if(dimensions[i] === 1) {
+                let indexes: number[] = this.makeShipOfSize1();
+                this.grid[indexes[0]][indexes[1]].type = 1;
+            } else if(dimensions[i] === 2) {
+                let indexes: number[] = this.makeShipOfSize2();
+                this.grid[indexes[0]][indexes[1]].type = 2;
+                this.grid[indexes[2]][indexes[3]].type = 2;
+            } else {
+                let indexes: number[] = this.makeShipOfSize3();
+                this.grid[indexes[0]][indexes[1]].type = 3;
+                this.grid[indexes[2]][indexes[3]].type = 3; 
+                this.grid[indexes[4]][indexes[5]].type = 3; 
             }
         }
-        console.log(JSON.stringify(this.grid));
         return this;
     }
 
     /**
      * Crea una nave di dimensione 1.
      */
-    makeShipOfSize1(){
+    makeShipOfSize1(): number[]{
         let x: number;
         let y: number;
 
@@ -83,7 +84,7 @@ export class GridBuilder {
             }
         } while (!doable);
         
-        this.grid[x][y].type = 1;
+        return [x, y];
     }
 
     /**
@@ -101,7 +102,6 @@ export class GridBuilder {
         let direction: number = getRandomInt(0, 1);
 
         do {
-            console.log("2");
             doable = true;
             x1 = getRandomInt(0, this.grid_size - 1);
             y1 = getRandomInt(0, this.grid_size - 1);
@@ -142,8 +142,7 @@ export class GridBuilder {
                 }
             }
         } while (!doable);
-        this.grid[x1][y1].type === 2;
-        this.grid[x2][y2].type === 2;
+        return [x1, y1, x2, y2];
     }
 
     /**
@@ -163,7 +162,6 @@ export class GridBuilder {
         let direction: number = getRandomInt(0, 1);
 
         do {
-            console.log("3");
             doable = true;
             x1 = getRandomInt(0, this.grid_size - 1);
             y1 = getRandomInt(0, this.grid_size - 1);
@@ -210,9 +208,7 @@ export class GridBuilder {
                 }
             }
         } while (!doable);
-        this.grid[x1][y1].type === 3;
-        this.grid[x2][y2].type === 3;
-        this.grid[x3][y3].type === 3;
+        return [x1, y1, x2, y2, x3, y3];
     }
 }
 

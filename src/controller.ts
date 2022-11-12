@@ -122,8 +122,8 @@ export function createGame(body: any, res: any): void {
             }
             const successFactory = new SuccessFactory();
             const success = successFactory.getSuccess(SuccessEnum.GameCreated);
-            res.status(success.getStatus).json({
-                message: success.getMsg,
+            res.status(success.getStatus()).json({
+                message: success.getMsg(),
                 id_game: game.id,
                 player1: game.player1,
                 player2: game.player2,

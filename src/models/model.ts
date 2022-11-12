@@ -135,17 +135,17 @@ export async function createGame(body: any): Promise<any> {
 /**
  * Funzione che decrementa i token dell'utente della quantità specificata.
  */
- export async function decreaseTokens(email: string, payment: number): Promise<any> {
-    let user: any = await User.findByPk(email, {raw: true});
+ export async function decreaseTokens(email: string, payment: number): Promise<void> {
+    let user: any = await User.findByPk(email);
     user.token = user.token - payment;
-    user.save();
+    await user.save();
 }
 
 /**
  * Funzione che imposta lo stato di un utente, data la sua email.
  */
-export async function setUserState(email: string, playing: boolean) {
-    let user: any = await User.findByPk(email, {raw: true});
+export async function setUserState(email: string, playing: boolean): Promise<void> {
+    let user: any = await User.findByPk(email);
     user.playing = playing;
-    user.save();
+    await user.save();
 }
