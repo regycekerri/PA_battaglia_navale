@@ -671,3 +671,39 @@ export async function makeMoveVsIA(body: any, game: any, res: any): Promise<void
         generateControllerErrors(ErrorEnum.InternalServer, error, res);
     }
 }
+
+/**
+ * Funzione che restituisce lo stato di una partita, dato il suo id.
+ */
+ export async function showGameState(body: any, res: any): Promise<void> {
+    const id_game: number = body.id_game;
+
+    try {
+        let game: any = await Model.getGameById(id_game);
+
+        const successFactory = new SuccessFactory();
+        const success = successFactory.getSuccess(SuccessEnum.GameStateShown);
+        res.status(success.getStatus()).json({
+            message: success.getMsg(),
+            id: game.id,
+            player1: game.player1,
+            player2: game.player2,
+            player3: game.player3,
+            ia: game.ia,
+            grid1: JSON.parse(game.grid1), 
+            grid2: JSON.parse(game.grid2),
+            grid3: JSON.parse(game.grid3),
+            gridIA: JSON.parse(game.gridIA),
+            attaccante: game.attaccante,
+            difensore: game.difensore,
+            in_progress: game.in_progress,
+            vincitore: game.vincitore,
+            perdente1: game.perdente1,
+            perdente2: game.perdente2,
+            start_date: game.start_date,
+            end_date: game.end_date
+        });
+    } catch (error) {
+        generateControllerErrors(ErrorEnum.InternalServer, error, res);
+    }
+}

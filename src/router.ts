@@ -66,4 +66,20 @@ app.post('/make_move',
     }
 );
 
+/**
+ * Rotta di tipo POST che consente di visualizzare lo stato di una partita.
+ */
+app.post('/game_state',
+    AuthMiddleware.checkAuthHeader,
+    AuthMiddleware.checkToken,
+    AuthMiddleware.verifyAndAuthenticate,
+    ControllerMiddleware.checkGameExistence,
+    ErrorHandlerMiddleware.errorHandler,
+    (req: any, res: any) => {
+        Controller.showGameState(req.body, res).then(() => {
+            console.log("Stato della partita restituito");
+        });
+    }
+)
+
 app.listen(8080);

@@ -826,6 +826,87 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "game_state",
+			"item": [
+				{
+					"name": "game_state_not_existing_game",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.MpuHA2k7MtWNY0k3SEzo0zfimbXF5LEkbj7peIfeyRk",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id_game\": 7\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/game_state",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"game_state"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "game_state_success",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.MpuHA2k7MtWNY0k3SEzo0zfimbXF5LEkbj7peIfeyRk",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id_game\": 7\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/game_state",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"game_state"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	]
 }
