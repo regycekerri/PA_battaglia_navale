@@ -47,15 +47,15 @@ CREATE TABLE move (
 
 INSERT INTO user (email, username, role, playing, token) VALUES
   ('adriano.mancini@gmail.com', 'Adriano', 'admin', FALSE, 100.00),
-  ('regy.cekerri@gmail.com', 'Regy', 'player', FALSE, 10.00),
-  ('davide.malatesta@gmail.com', 'Davide', 'player', FALSE, 10.00),
-  ('horatio.nelson@gmail.com', 'Nelson', 'player', FALSE, 0.30),
+  ('regy.cekerri@gmail.com', 'Regy', 'player', TRUE, 10.00),
+  ('davide.malatesta@gmail.com', 'Davide', 'player', TRUE, 10.00),
+  ('horatio.nelson@gmail.com', 'Nelson', 'player', TRUE, 0.30),
   ('francesco.schettino@gmail.com', 'Schettino', 'player', FALSE, 0.35),
   ('will.murdoch@gmail.com', 'Murdoch', 'player', FALSE, 5.00),
   ('capitano.uncino@gmail.com', 'Capitano Uncino', 'player', FALSE, 7.50),
-  ('mugiwara@gmail.com', 'Rufy', 'player', FALSE, 25.00),
-  ('cristoforo.colombo@gmail.com', 'Colombo', 'player', FALSE, 15.40),
-  ('neil.armstrong@gmail.com', 'Armstrong', 'player', FALSE, 75.00);
+  ('mugiwara@gmail.com', 'Rufy', 'player', TRUE, 25.00),
+  ('cristoforo.colombo@gmail.com', 'Colombo', 'player', TRUE, 15.40),
+  ('neil.armstrong@gmail.com', 'Armstrong', 'player', TRUE, 75.00);
 
 INSERT INTO game (id, player1, player2, player3, ia, grid1, grid2, grid3, gridIA, attaccante, difensore, 
                   in_progress, vincitore, perdente1, perdente2, start_date, end_date) VALUES
@@ -71,7 +71,18 @@ INSERT INTO game (id, player1, player2, player3, ia, grid1, grid2, grid3, gridIA
     '{"grid":[[{"type":0,"attacked":false},{"type":0,"attacked":true},{"type":0,"attacked":false}],[{"type":1,"attacked":false},{"type":0,"attacked":false},{"type":0,"attacked":false}],[{"type":0,"attacked":false},{"type":0,"attacked":false},{"type":0,"attacked":false}]]}',
     NULL, NULL,
     '{"grid":[[{"type":0,"attacked":true},{"type":1,"attacked":false},{"type":0,"attacked":false}],[{"type":0,"attacked":false},{"type":0,"attacked":false},{"type":0,"attacked":false}],[{"type":0,"attacked":false},{"type":0,"attacked":false},{"type":0,"attacked":false}]]}',
-    "horatio.nelson@gmail.com", "ia", TRUE, NULL, NULL, NULL, '2022-11-12', NULL);
+    "horatio.nelson@gmail.com", "ia", TRUE, NULL, NULL, NULL, '2022-11-12', NULL),
+  (4, "cristoforo.colombo@gmail.com", "neil.armstrong@gmail.com", NULL, FALSE,
+  '{"grid":[[{"type":0,"attacked":false},{"type":0,"attacked":false},{"type":0,"attacked":false}],[{"type":1,"attacked":false},{"type":0,"attacked":false},{"type":1,"attacked":false}],[{"type":0,"attacked":false},{"type":0,"attacked":false},{"type":0,"attacked":false}]]}',
+  '{"grid":[[{"type":0,"attacked":false},{"type":1,"attacked":false},{"type":0,"attacked":false}],[{"type":0,"attacked":false},{"type":0,"attacked":false},{"type":0,"attacked":false}],[{"type":0,"attacked":false},{"type":0,"attacked":false},{"type":1,"attacked":false}]]}',
+  NULL, NULL, "cristoforo.colombo@gmail.com", "neil.armstrong@gmail.com", TRUE, NULL, NULL, NULL, '2022-11-13', NULL
+  ),
+  (5, "regy.cekerri@gmail.com", "davide.malatesta@gmail.com", "mugiwara@gmail.com", FALSE,
+  '{"grid":[[{"type":0,"attacked":false},{"type":1,"attacked":false},{"type":0,"attacked":false}],[{"type":0,"attacked":false},{"type":0,"attacked":false},{"type":0,"attacked":false}],[{"type":0,"attacked":false},{"type":0,"attacked":false},{"type":0,"attacked":false}]]}',
+  '{"grid":[[{"type":1,"attacked":false},{"type":0,"attacked":false},{"type":0,"attacked":false}],[{"type":0,"attacked":false},{"type":0,"attacked":false},{"type":0,"attacked":false}],[{"type":0,"attacked":false},{"type":0,"attacked":false},{"type":0,"attacked":false}]]}',
+  '{"grid":[[{"type":0,"attacked":false},{"type":0,"attacked":false},{"type":0,"attacked":false}],[{"type":0,"attacked":false},{"type":0,"attacked":false},{"type":0,"attacked":false}],[{"type":0,"attacked":false},{"type":1,"attacked":false},{"type":0,"attacked":false}]]}',
+  NULL, "regy.cekerri@gmail.com", "davide.malatesta@gmail.com", TRUE, NULL, NULL, NULL, "2021-12-25", NULL
+  );
 
 INSERT INTO move (id_game, id, attaccante, difensore, x, y, colpita_nave) VALUES 
   (1, 1, "regy.cekerri@gmail.com", "davide.malatesta@gmail.com", 3, 2, FALSE),

@@ -1,0 +1,831 @@
+{
+	"info": {
+		"_postman_id": "f81d234b-0a02-4a21-85f2-5d52df2c6505",
+		"name": "PA_battaglia_navale",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "14064646"
+	},
+	"item": [
+		{
+			"name": "create_game",
+			"item": [
+				{
+					"name": "create_game_no_token",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/create_game",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"create_game"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create_game_invalid_token",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.M-OSgMHuzLghe3PcQrb1giaeDYhPzpLShsk4U_L5ZHM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/create_game",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"create_game"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create_game_invalid_game_mode",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.MpuHA2k7MtWNY0k3SEzo0zfimbXF5LEkbj7peIfeyRk",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"game_mode\": 5,\r\n  \"grid_size\": 8,\r\n  \"number_of_ships\": 4,\r\n  \"maximum_ship_size\": 3,\r\n  \"email1\": \"regy.cekerri@gmail.com\",\r\n  \"email2\": \"adriano.mancini@gmail.com\",\r\n  \"email3\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/create_game",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"create_game"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create_game_invalid_number_of_emails",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJnYW1lX21vZGUiOjIsImdyaWRfc2l6ZSI6NiwibnVtYmVyX29mX3NoaXBzIjoyLCJtYXhpbXVtX3NoaXBfc2l6ZSI6MiwiZW1haWwxIjoiIiwiZW1haWwyIjoiZGF2aWRlLm1hbGF0ZXN0YUBnbWFpbC5jb20iLCJlbWFpbDMiOiJhZHJpYW5vLm1hbmNpbmlAZ21haWwuY29tIn0.vo420Y-2-a-vV4msLAYp3Z1Tl32XbeJVTAWYGPst9IM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"game_mode\": 1,\r\n    \"grid_size\": 8,\r\n    \"number_of_ships\": 4,\r\n    \"maximum_ship_size\": 3,\r\n    \"email1\": \"regy.cekerri@gmail.com\",\r\n    \"email2\": \"adriano.mancini@gmail.com\",\r\n    \"email3\": \"davide.malatesta@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/create_game",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"create_game"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create_game_invalid_grid_size",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJnYW1lX21vZGUiOjIsImdyaWRfc2l6ZSI6NiwibnVtYmVyX29mX3NoaXBzIjoyLCJtYXhpbXVtX3NoaXBfc2l6ZSI6MiwiZW1haWwxIjoiIiwiZW1haWwyIjoiZGF2aWRlLm1hbGF0ZXN0YUBnbWFpbC5jb20iLCJlbWFpbDMiOiJhZHJpYW5vLm1hbmNpbmlAZ21haWwuY29tIn0.vo420Y-2-a-vV4msLAYp3Z1Tl32XbeJVTAWYGPst9IM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"game_mode\": 1,\r\n    \"grid_size\": 2,\r\n    \"number_of_ships\": 4,\r\n    \"maximum_ship_size\": 3,\r\n    \"email1\": \"regy.cekerri@gmail.com\",\r\n    \"email2\": \"adriano.mancini@gmail.com\",\r\n    \"email3\": null\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/create_game",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"create_game"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create_game_invalid_number_of_ships",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJnYW1lX21vZGUiOjIsImdyaWRfc2l6ZSI6NiwibnVtYmVyX29mX3NoaXBzIjoyLCJtYXhpbXVtX3NoaXBfc2l6ZSI6MiwiZW1haWwxIjoiIiwiZW1haWwyIjoiZGF2aWRlLm1hbGF0ZXN0YUBnbWFpbC5jb20iLCJlbWFpbDMiOiJhZHJpYW5vLm1hbmNpbmlAZ21haWwuY29tIn0.vo420Y-2-a-vV4msLAYp3Z1Tl32XbeJVTAWYGPst9IM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"game_mode\": 1,\r\n    \"grid_size\": 5,\r\n    \"number_of_ships\": 4,\r\n    \"maximum_ship_size\": 3,\r\n    \"email1\": \"regy.cekerri@gmail.com\",\r\n    \"email2\": \"adriano.mancini@gmail.com\",\r\n    \"email3\": null\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/create_game",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"create_game"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create_game_invalid_maximum_ship_size",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJnYW1lX21vZGUiOjIsImdyaWRfc2l6ZSI6NiwibnVtYmVyX29mX3NoaXBzIjoyLCJtYXhpbXVtX3NoaXBfc2l6ZSI6MiwiZW1haWwxIjoiIiwiZW1haWwyIjoiZGF2aWRlLm1hbGF0ZXN0YUBnbWFpbC5jb20iLCJlbWFpbDMiOiJhZHJpYW5vLm1hbmNpbmlAZ21haWwuY29tIn0.vo420Y-2-a-vV4msLAYp3Z1Tl32XbeJVTAWYGPst9IM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"game_mode\": 1,\r\n    \"grid_size\": 5,\r\n    \"number_of_ships\": 3,\r\n    \"maximum_ship_size\": 4,\r\n    \"email1\": \"regy.cekerri@gmail.com\",\r\n    \"email2\": \"adriano.mancini@gmail.com\",\r\n    \"email3\": null\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/create_game",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"create_game"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create_game_matching_users",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJnYW1lX21vZGUiOjIsImdyaWRfc2l6ZSI6NiwibnVtYmVyX29mX3NoaXBzIjoyLCJtYXhpbXVtX3NoaXBfc2l6ZSI6MiwiZW1haWwxIjoiIiwiZW1haWwyIjoiZGF2aWRlLm1hbGF0ZXN0YUBnbWFpbC5jb20iLCJlbWFpbDMiOiJhZHJpYW5vLm1hbmNpbmlAZ21haWwuY29tIn0.vo420Y-2-a-vV4msLAYp3Z1Tl32XbeJVTAWYGPst9IM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"game_mode\": 2,\r\n    \"grid_size\": 5,\r\n    \"number_of_ships\": 3,\r\n    \"maximum_ship_size\": 3,\r\n    \"email1\": \"regy.cekerri@gmail.com\",\r\n    \"email2\": \"davide.malatesta@gmail.com\",\r\n    \"email3\": \"davide.malatesta@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/create_game",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"create_game"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create_game_not_existing_user",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJnYW1lX21vZGUiOjIsImdyaWRfc2l6ZSI6NiwibnVtYmVyX29mX3NoaXBzIjoyLCJtYXhpbXVtX3NoaXBfc2l6ZSI6MiwiZW1haWwxIjoiIiwiZW1haWwyIjoiZGF2aWRlLm1hbGF0ZXN0YUBnbWFpbC5jb20iLCJlbWFpbDMiOiJhZHJpYW5vLm1hbmNpbmlAZ21haWwuY29tIn0.vo420Y-2-a-vV4msLAYp3Z1Tl32XbeJVTAWYGPst9IM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"game_mode\": 1,\r\n    \"grid_size\": 5,\r\n    \"number_of_ships\": 3,\r\n    \"maximum_ship_size\": 3,\r\n    \"email1\": \"regy.cekerri@gmail.com\",\r\n    \"email2\": \"davide.magnifico@gmail.com\",\r\n    \"email3\": null\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/create_game",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"create_game"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create_game_insufficient_tokens",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJnYW1lX21vZGUiOjIsImdyaWRfc2l6ZSI6NiwibnVtYmVyX29mX3NoaXBzIjoyLCJtYXhpbXVtX3NoaXBfc2l6ZSI6MiwiZW1haWwxIjoiIiwiZW1haWwyIjoiZGF2aWRlLm1hbGF0ZXN0YUBnbWFpbC5jb20iLCJlbWFpbDMiOiJhZHJpYW5vLm1hbmNpbmlAZ21haWwuY29tIn0.vo420Y-2-a-vV4msLAYp3Z1Tl32XbeJVTAWYGPst9IM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"game_mode\": 1,\r\n    \"grid_size\": 5,\r\n    \"number_of_ships\": 3,\r\n    \"maximum_ship_size\": 3,\r\n    \"email1\": \"regy.cekerri@gmail.com\",\r\n    \"email2\": \"francesco.schettino@gmail.com\",\r\n    \"email3\": null\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/create_game",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"create_game"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create_game_already_playing",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJnYW1lX21vZGUiOjIsImdyaWRfc2l6ZSI6NiwibnVtYmVyX29mX3NoaXBzIjoyLCJtYXhpbXVtX3NoaXBfc2l6ZSI6MiwiZW1haWwxIjoiIiwiZW1haWwyIjoiZGF2aWRlLm1hbGF0ZXN0YUBnbWFpbC5jb20iLCJlbWFpbDMiOiJhZHJpYW5vLm1hbmNpbmlAZ21haWwuY29tIn0.vo420Y-2-a-vV4msLAYp3Z1Tl32XbeJVTAWYGPst9IM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"game_mode\": 1,\r\n    \"grid_size\": 5,\r\n    \"number_of_ships\": 2,\r\n    \"maximum_ship_size\": 3,\r\n    \"email1\": \"regy.cekerri@gmail.com\",\r\n    \"email2\": \"capitano.uncino@gmail.com\",\r\n    \"email3\": null\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/create_game",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"create_game"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create_game_success",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJnYW1lX21vZGUiOjIsImdyaWRfc2l6ZSI6NiwibnVtYmVyX29mX3NoaXBzIjoyLCJtYXhpbXVtX3NoaXBfc2l6ZSI6MiwiZW1haWwxIjoiIiwiZW1haWwyIjoiZGF2aWRlLm1hbGF0ZXN0YUBnbWFpbC5jb20iLCJlbWFpbDMiOiJhZHJpYW5vLm1hbmNpbmlAZ21haWwuY29tIn0.vo420Y-2-a-vV4msLAYp3Z1Tl32XbeJVTAWYGPst9IM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"game_mode\": 1,\r\n    \"grid_size\": 5,\r\n    \"number_of_ships\": 2,\r\n    \"maximum_ship_size\": 3,\r\n    \"email1\": \"adriano.mancini@gmail.com\",\r\n    \"email2\": \"capitano.uncino@gmail.com\",\r\n    \"email3\": null\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/create_game",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"create_game"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "make_move",
+			"item": [
+				{
+					"name": "make_move_invalid_id_game",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.MpuHA2k7MtWNY0k3SEzo0zfimbXF5LEkbj7peIfeyRk",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id_game\": true,\r\n    \"email\": \"regy.cekerri@gmail.com\",\r\n    \"x\": 5,\r\n    \"y\": 5\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/make_move",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"make_move"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "make_move_not_existing_game",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.MpuHA2k7MtWNY0k3SEzo0zfimbXF5LEkbj7peIfeyRk",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id_game\": 6,\r\n    \"email\": \"regy.cekerri@gmail.com\",\r\n    \"x\": 5,\r\n    \"y\": 5\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/make_move",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"make_move"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "make_move_already_finished_game",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.MpuHA2k7MtWNY0k3SEzo0zfimbXF5LEkbj7peIfeyRk",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id_game\": 2,\r\n    \"email\": \"regy.cekerri@gmail.com\",\r\n    \"x\": 5,\r\n    \"y\": 5\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/make_move",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"make_move"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "make_move_not_your_turn",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.MpuHA2k7MtWNY0k3SEzo0zfimbXF5LEkbj7peIfeyRk",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id_game\": 3,\r\n    \"email\": \"regy.cekerri@gmail.com\",\r\n    \"x\": 5,\r\n    \"y\": 5\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/make_move",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"make_move"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "make_move_invalid_x_and_y",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.MpuHA2k7MtWNY0k3SEzo0zfimbXF5LEkbj7peIfeyRk",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id_game\": 3,\r\n    \"email\": \"horatio.nelson@gmail.com\",\r\n    \"x\": true,\r\n    \"y\": 5\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/make_move",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"make_move"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "make_move_invalid_move",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.MpuHA2k7MtWNY0k3SEzo0zfimbXF5LEkbj7peIfeyRk",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id_game\": 3,\r\n    \"email\": \"horatio.nelson@gmail.com\",\r\n    \"x\": 0,\r\n    \"y\": 3\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/make_move",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"make_move"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "make_move_already_done_mode",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.MpuHA2k7MtWNY0k3SEzo0zfimbXF5LEkbj7peIfeyRk",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id_game\": 3,\r\n    \"email\": \"horatio.nelson@gmail.com\",\r\n    \"x\": 1,\r\n    \"y\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/make_move",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"make_move"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "make_move_success_vs_ia",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.MpuHA2k7MtWNY0k3SEzo0zfimbXF5LEkbj7peIfeyRk",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id_game\": 3,\r\n    \"email\": \"horatio.nelson@gmail.com\",\r\n    \"x\": 1,\r\n    \"y\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/make_move",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"make_move"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "make_move_success_vs_player",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.MpuHA2k7MtWNY0k3SEzo0zfimbXF5LEkbj7peIfeyRk",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id_game\": 4,\r\n    \"email\": \"cristoforo.colombo@gmail.com\",\r\n    \"x\": 3,\r\n    \"y\": 3\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/make_move",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"make_move"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "make_move_success_vs_players",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.MpuHA2k7MtWNY0k3SEzo0zfimbXF5LEkbj7peIfeyRk",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id_game\": 5,\r\n    \"email\": \"regy,cekerri@gmail.com\",\r\n    \"x\": 1,\r\n    \"y\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/make_move",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"make_move"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

@@ -120,7 +120,7 @@ export async function createGame(body: any, res: any): Promise<void> {
             } else {
                 await Model.decreaseTokens(email1, 0.4);
                 await Model.decreaseTokens(email2, 0.4);
-                await Model .decreaseTokens(email3, 0.4);
+                await Model.decreaseTokens(email3, 0.4);
                 await Model.setUserState(email1, true);
                 await Model.setUserState(email2, true);
                 await Model.setUserState(email3, true);
@@ -249,6 +249,7 @@ export async function makeMoveVsIA(body: any, game: any, res: any): Promise<void
         }
 
         await Model.createMove(id_game, attaccante, 'ia', x, y, colpita_nave);
+        await Model.decreaseTokens(attaccante, 0.01);
 
         //Verifico se ci sono altre navi, in caso negativo la mossa è conclusiva
         let partita_finita: boolean = true;
@@ -271,6 +272,7 @@ export async function makeMoveVsIA(body: any, game: any, res: any): Promise<void
             game.end_date = new Date().toISOString().slice(0, 10);
 
             await game.save();
+            await Model.setUserState(attaccante, false);
 
             const successFactory = new SuccessFactory();
             const success = successFactory.getSuccess(SuccessEnum.MoveExecuted);
@@ -305,6 +307,7 @@ export async function makeMoveVsIA(body: any, game: any, res: any): Promise<void
             }
 
             await Model.createMove(id_game, 'ia', attaccante, x_ia, y_ia, colpita_nave1);
+            await Model.decreaseTokens(attaccante, 0.01);
 
             //Verifico se ci sono altre navi, in caso negativo la mossa è conclusiva
             let partita_finita_ia: boolean = true;
@@ -327,6 +330,7 @@ export async function makeMoveVsIA(body: any, game: any, res: any): Promise<void
                 game.end_date = new Date().toISOString().slice(0, 10);
 
                 await game.save();
+                await Model.setUserState(attaccante, false);
 
                 const successFactory = new SuccessFactory();
                 const success = successFactory.getSuccess(SuccessEnum.MoveExecuted);
@@ -346,7 +350,319 @@ export async function makeMoveVsIA(body: any, game: any, res: any): Promise<void
                     message: success.getMsg(),
                     attaccante: attaccante,
                     difensore: 'ia',
-                    esito: "L'ia ha risposto alla tua mossa, è di nuovo il tuo turno!"
+                    esito: "L'ia ha risposto alla tua mossa, è di nuovo il tuo turno!",
+                    colpita_nave: colpita_nave
+                });
+            }
+        }
+    } catch(error) {
+        console.log(error);
+        generateControllerErrors(ErrorEnum.InternalServer, error, res);
+    }
+}
+
+/**
+ * Funzione che effettua una mossa contro un altro giocatore (in una partita pvp).
+ */
+ export async function makeMoveVsPlayer(body: any, game: any, res: any): Promise<void> {
+    const id_game: number = body.id_game;
+    const attaccante: string = body.email;
+    const x: number = body.x;
+    const y: number = body.y;
+    let difensore: string;
+
+    try {
+        //Attacchiamo la cella dell'altro giocatore
+        let grid: Grid;
+        if(attaccante === game.player1) {
+            grid = JSON.parse(game.grid2);
+            difensore = game.player2;
+        } else {
+            grid = JSON.parse(game.grid1);
+            difensore = game.player1;
+        }
+        let colpita_nave: boolean = false;
+        grid.grid[x - 1][y - 1].attacked = true;
+        if(grid.grid[x - 1][y - 1].type !== 0) {
+            grid.grid[x - 1][y - 1].type = 0;
+            colpita_nave = true;
+        }
+
+        await Model.createMove(id_game, attaccante, difensore, x, y, colpita_nave);
+        await Model.decreaseTokens(attaccante, 0.01);
+        await Model.decreaseTokens(difensore, 0.01);
+
+        //Verifico se ci sono altre navi, in caso negativo la mossa è conclusiva
+        let partita_finita: boolean = true;
+        for(let i = 0; i < grid.grid.length; i++) {
+            for(let j = 0; j < grid.grid.length; j++) {
+                if(grid.grid[i][j].type !== 0) {
+                    partita_finita = false;
+                }
+            }
+        }
+        
+        //Se la mossa è conclusiva...
+        if(partita_finita) {
+            if(attaccante === game.player1) {
+                game.grid2 = JSON.stringify(grid);
+            } else{
+                game.grid1 = JSON.stringify(grid);
+            }
+            game.attaccante = null;
+            game.difensore = null;
+            game.in_progress = false;
+            game.vincitore = attaccante;
+            game.perdente1 = difensore;
+            game.end_date = new Date().toISOString().slice(0, 10);
+
+            await game.save();
+            await Model.setUserState(attaccante, false);
+            await Model.setUserState(difensore, false);
+
+            const successFactory = new SuccessFactory();
+            const success = successFactory.getSuccess(SuccessEnum.MoveExecuted);
+            res.status(success.getStatus()).json({
+                message: success.getMsg(),
+                attaccante: attaccante,
+                difensore: difensore,
+                esito: "Complimenti, hai vinto!"
+            });
+        } else {
+            if(attaccante === game.player1) {
+                game.grid2 = JSON.stringify(grid);
+            } else{
+                game.grid1 = JSON.stringify(grid);
+            }
+            game.attaccante = difensore;
+            game.difensore = attaccante;
+                
+            await game.save();
+
+            const successFactory = new SuccessFactory();
+            const success = successFactory.getSuccess(SuccessEnum.MoveExecuted);
+            res.status(success.getStatus()).json({
+                message: success.getMsg(),
+                attaccante: attaccante,
+                difensore: difensore,
+                esito: "Hai effettuato la tua mossa, ora è il turno dell'altro giocatore!",
+                colpita_nave: colpita_nave
+                });
+            }
+    } catch(error) {
+        console.log(error);
+        generateControllerErrors(ErrorEnum.InternalServer, error, res);
+    }
+}
+
+/**
+ * Funzione che effettua una mossa contro un altro giocatore (in una partita pvpvp).
+ */
+ export async function makeMoveVsPlayers(body: any, game: any, res: any): Promise<void> {
+    const id_game: number = body.id_game;
+    const attaccante: string = body.email;
+    const x: number = body.x;
+    const y: number = body.y;
+    let difensore: string = game.difensore;
+
+    try {
+        if(game.perdente2 !== null) {
+            //Caso 1: sono rimasti due giocatori in gioco
+            //Attacchiamo la cella dell'altro giocatore
+            let grid: Grid;
+            if(difensore === game.player1) {
+                grid = JSON.parse(game.grid1);
+            } else if(difensore === game.player2) {
+                grid = JSON.parse(game.grid2);
+            } else {
+                grid = JSON.parse(game.grid3);
+            }
+            let colpita_nave: boolean = false;
+            grid.grid[x - 1][y - 1].attacked = true;
+            if(grid.grid[x - 1][y - 1].type !== 0) {
+                grid.grid[x - 1][y - 1].type = 0;
+                colpita_nave = true;
+            }
+
+            await Model.createMove(id_game, attaccante, difensore, x, y, colpita_nave);
+            await Model.decreaseTokens(game.player1, 0.01);
+            await Model.decreaseTokens(game.player2, 0.01);
+            await Model.decreaseTokens(game.player3, 0.01);
+
+            //Verifico se ci sono altre navi, in caso negativo la mossa è conclusiva
+            let partita_finita: boolean = true;
+            for(let i = 0; i < grid.grid.length; i++) {
+                for(let j = 0; j < grid.grid.length; j++) {
+                    if(grid.grid[i][j].type !== 0) {
+                        partita_finita = false;
+                    }
+                }
+            }
+
+            //Se la mossa è conclusiva...
+            if(partita_finita) {
+                if(difensore === game.player1) {
+                    game.grid1 = JSON.stringify(grid);
+                } else if(difensore === game.player2) {
+                    game.grid2 = JSON.stringify(grid);
+                } else {
+                    game.grid3 = JSON.stringify(grid);
+                }
+
+                game.attaccante = null;
+                game.difensore = null;
+                game.in_progress = false;
+                game.vincitore = attaccante;
+                game.perdente1 = difensore;
+                game.end_date = new Date().toISOString().slice(0, 10);
+
+                await game.save();
+                await Model.setUserState(game.player1, false);
+                await Model.setUserState(game.player2, false);
+                await Model.setUserState(game.player3, false);
+
+                const successFactory = new SuccessFactory();
+                const success = successFactory.getSuccess(SuccessEnum.MoveExecuted);
+                res.status(success.getStatus()).json({
+                    message: success.getMsg(),
+                    attaccante: attaccante,
+                    difensore: difensore,
+                    esito: "Complimenti, hai vinto!"
+                });
+            } else {
+                if(difensore === game.player1) {
+                    game.grid1 = JSON.stringify(grid);
+                } else if(difensore === game.player2) {
+                    game.grid2 = JSON.stringify(grid);
+                } else {
+                    game.grid3 = JSON.stringify(grid);
+                }
+
+                game.attaccante = difensore;
+                game.difensore = attaccante;
+
+                await game.save();
+
+                const successFactory = new SuccessFactory();
+                const success = successFactory.getSuccess(SuccessEnum.MoveExecuted);
+                res.status(success.getStatus()).json({
+                    message: success.getMsg(),
+                    attaccante: attaccante,
+                    difensore: difensore,
+                    esito: "Hai effettuato la tua mossa, ora è il turno dell'altro giocatore!",
+                    colpita_nave: colpita_nave
+                });
+            }
+        } else {
+            //Caso 2: sono rimasti tre giocatori in gioco
+            //Attacchiamo la cella dell'altro giocatore
+            let grid: Grid;
+            if(difensore === game.player1) {
+                grid = JSON.parse(game.grid1);
+            } else if(difensore === game.player2) {
+                grid = JSON.parse(game.grid2);
+            } else {
+                grid = JSON.parse(game.grid3);
+            }
+            let colpita_nave: boolean = false;
+            grid.grid[x - 1][y - 1].attacked = true;
+            if(grid.grid[x - 1][y - 1].type !== 0) {
+                grid.grid[x - 1][y - 1].type = 0;
+                colpita_nave = true;
+            }
+
+            await Model.createMove(id_game, attaccante, difensore, x, y, colpita_nave);
+            await Model.decreaseTokens(game.player1, 0.01);
+            await Model.decreaseTokens(game.player2, 0.01);
+            await Model.decreaseTokens(game.player3, 0.01);
+
+            //Verifico se ci sono altre navi, in caso negativo la mossa è quella che sconfigge uno dei giocatori
+            let giocatore_sconfitto: boolean = true;
+            for(let i = 0; i < grid.grid.length; i++) {
+                for(let j = 0; j < grid.grid.length; j++) {
+                    if(grid.grid[i][j].type !== 0) {
+                        giocatore_sconfitto = false;
+                    }
+                }
+            }
+
+            //Se la mossa sconfigge il giocatore...
+            if(giocatore_sconfitto) {
+                if(difensore === game.player1) {
+                    game.grid1 = JSON.stringify(grid);
+                    if(attaccante === game.player2) {
+                        game.attaccante = game.player3;
+                    } else {
+                        game.attaccante = game.player2;
+                    }
+                } else if(difensore === game.player2) {
+                    game.grid2 = JSON.stringify(grid);
+                    if(attaccante === game.player1) {
+                        game.attaccante = game.player3;
+                    } else {
+                        game.attaccante = game.player1;
+                    }
+                } else {
+                    game.grid3 = JSON.stringify(grid);
+                    if(attaccante === game.player1) {
+                        game.attaccante = game.player2;
+                    } else {
+                        game.attaccante = game.player1;
+                    }
+                }
+                game.difensore = attaccante;
+                game.perdente2 = difensore;
+
+                await game.save();
+
+                const successFactory = new SuccessFactory();
+                const success = successFactory.getSuccess(SuccessEnum.MoveExecuted);
+                res.status(success.getStatus()).json({
+                    message: success.getMsg(),
+                    attaccante: attaccante,
+                    difensore: difensore,
+                    esito: "Hai sconfitto un giocatore, ne rimane un altro!"
+                });
+            } else {
+                if(difensore === game.player1) {
+                    game.grid1 = JSON.stringify(grid);
+                } else if(difensore === game.player2) {
+                    game.grid2 = JSON.stringify(grid);
+                } else {
+                    game.grid3 = JSON.stringify(grid);
+                }
+
+                //Si rispetta la turnazione
+                if(attaccante === game.player1 && difensore === game.player2) {
+                    game.attaccante = game.player3;
+                    game.difensore = game.player1;
+                } else if(attaccante === game.player3 && difensore === game.player1) {
+                    game.attaccante = game.player2;
+                    game.difensore = game.player3;
+                } else if(attaccante === game.player2 && difensore === game.player3) {
+                    game.attaccante = game.player3;
+                    game.difensore = game.player2;
+                } else if(attaccante === game.player3 && difensore === game.player2) {
+                    game.attaccante = game.player1;
+                    game.difensore = game.player3;
+                } else if(attaccante === game.player1 && difensore === game.player3) {
+                    game.attaccante = game.player2;
+                    game.difensore = game.player1;
+                } else if(attaccante === game.player2 && difensore === game.player1) {
+                    game.attaccante = game.player1;
+                    game.difensore = game.player2;
+                }
+
+                await game.save();
+
+                const successFactory = new SuccessFactory();
+                const success = successFactory.getSuccess(SuccessEnum.MoveExecuted);
+                res.status(success.getStatus()).json({
+                    message: success.getMsg(),
+                    attaccante: attaccante,
+                    difensore: difensore,
+                    esito: "Hai effettuato la tua mossa, ora è il turno dell'altro giocatore!",
+                    colpita_nave: colpita_nave
                 });
             }
         }

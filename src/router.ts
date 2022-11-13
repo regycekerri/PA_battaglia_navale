@@ -50,9 +50,17 @@ app.post('/make_move',
     (req: any, res: any) => {
         getGameById(req.body.id_game).then((game) => {
             if(game.ia) {
+                //Partita contro ia
+                console.log("Mossa contro ia eseguita");
                 Controller.makeMoveVsIA(req.body, game, res);
+            } else if(game.player3 === null) {
+                //Partita tra due giocatori
+                console.log("Mossa contro giocatore eseguita");
+                Controller.makeMoveVsPlayer(req.body, game, res);
             } else {
-                console.log("Mossa contro altro giocatore");
+                //Partita tra tre giocatori
+                console.log("Mossa contro uno di due giocatori eseguita");
+                Controller.makeMoveVsPlayers(req.body, game, res);
             }
         });
     }
