@@ -32,7 +32,7 @@ export class GridBuilder {
     /**
      * Funzione che restituisce la griglia.
      */
-    getGrid() {
+    public getGrid() {
         return this.grid;
     }
 

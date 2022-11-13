@@ -59,7 +59,7 @@ class InvalidGridSizeError implements ErrorI {
         return 400;
     }
     getMsg(): string {
-        return "Bad Request - Grid size must be a number between 5 and 15"
+        return "Bad Request - Grid size must be a number between 3 and 8"
     }
 }
 
@@ -126,6 +126,69 @@ class AlreadyPlayingError implements ErrorI {
     }
 }
 
+class InvalidIdGameError implements ErrorI {
+    getStatus(): number {
+        return 400;
+    }
+    getMsg(): string {
+        return "Bad Request - Id game must be an integer"
+    }
+}
+
+class NotExistingGameError implements ErrorI {
+    getStatus(): number {
+        return 404;
+    }
+    getMsg(): string {
+        return "Not Found - The given id doesn't correspond to any game"
+    }
+}
+
+class AlreadyFinishedGameError implements ErrorI {
+    getStatus(): number {
+        return 400;
+    }
+    getMsg(): string {
+        return "Bad Request - The game you are looking for has already finished"
+    }
+}
+
+class NotYourTurnError implements ErrorI {
+    getStatus(): number {
+        return 401;
+    }
+    getMsg(): string {
+        return "Unauthorized - It's not your turn"
+    }
+}
+
+class InvalidXAndYError implements ErrorI {
+    getStatus(): number {
+        return 400;
+    }
+    getMsg(): string {
+        return "Bad Request - X (row of the cell to attack) and Y (column of the cell to attack) must be integers ";
+    }
+}
+
+class InvalidMoveError implements ErrorI {
+    getStatus(): number {
+        return 400;
+    }
+    getMsg(): string {
+        return "Bad Request - You are attempting to attack a cell that doesn't exist";
+    }
+}
+
+class AlreadyDoneMoveError implements ErrorI {
+    getStatus(): number {
+        return 400;
+    }
+    getMsg(): string {
+        return "Bad Request - Your are attempting to attack a cell that has already been attacked";
+    }
+}
+
 export enum ErrorEnum {
     NoAuthHeader,
     NoToken,
@@ -140,6 +203,13 @@ export enum ErrorEnum {
     MatchingUsers,
     InsufficientTokens,
     AlreadyPlaying,
+    InvalidIdGame,
+    NotExistingGame,
+    AlreadyFinishedGame,
+    NotYourTurn,
+    InvalidXAndY,
+    InvalidMove,
+    AlreadyDoneMove
 }
 
 /**
@@ -189,6 +259,27 @@ export class ErrorFactory {
                 break;
             case(ErrorEnum.AlreadyPlaying):
                 error = new AlreadyPlayingError();
+                break;
+            case(ErrorEnum.InvalidIdGame):
+                error = new InvalidIdGameError();
+                break;
+            case(ErrorEnum.NotExistingGame):
+                error = new NotExistingGameError();
+                break;
+            case(ErrorEnum.AlreadyFinishedGame):
+                error = new AlreadyFinishedGameError();
+                break;
+            case(ErrorEnum.NotYourTurn):
+                error = new NotYourTurnError();
+                break;
+            case(ErrorEnum.InvalidXAndY):
+                error = new InvalidXAndYError();
+                break;
+            case(ErrorEnum.InvalidMove):
+                error = new InvalidMoveError();
+                break;
+            case(ErrorEnum.AlreadyDoneMove):
+                error = new AlreadyDoneMoveError();
                 break;
         }
 

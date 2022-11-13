@@ -106,3 +106,43 @@ export const Game = connection.define('game', {
     timestamps: false,
     freezeTableName: true
 });
+
+/**
+ * Modello che rappresenta la tabella delle mosse nel database (tramite ORM).
+ */
+ export const Move = connection.define('move', {
+    id_game: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    },
+    attaccante: {
+        type: DataTypes.STRING(30),
+        allowNull: false
+    },
+    difensore: {
+        type: DataTypes.STRING(30),
+        allowNull: false
+    },
+    x: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    y: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    colpita_nave: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false
+    }
+},
+{
+    modelName: 'move', 
+    timestamps: false,
+    freezeTableName: true
+});

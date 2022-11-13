@@ -1,7 +1,7 @@
 import { Grid } from './grid/grid';
 import { GridBuilder } from './grid/gridbuilder';
 import { getRandomInt } from './grid/utility';
-import { User, Game } from './orm';
+import { User, Game, Move } from './orm';
 
 /**
  * Funzione che verifica l'esistenza di un utente nel database, data la sua email.
@@ -137,7 +137,6 @@ export async function createGame(body: any): Promise<any> {
 
 /**
  * Funzione che decrementa i token dell'utente della quantità specificata.
- * 
  */
  export async function decreaseTokens(email: string, payment: number): Promise<void> {
     let user: any = await User.findByPk(email);
@@ -147,11 +146,109 @@ export async function createGame(body: any): Promise<any> {
 
 /**
  * Funzione che imposta lo stato di un utente, data la sua email.
- * 
- * Restituisce true se l'operazione va a buon fine, false altrimenti.
  */
 export async function setUserState(email: string, playing: boolean): Promise<void> {
     let user: any = await User.findByPk(email);
     user.playing = playing;
     await user.save();
+}
+
+/**
+ * Funzione che verifica l'esistenza di una partita nel database, dato il suo id.
+ */
+ export async function checkIfGameExists(id_game: number): Promise<boolean> {
+    let check: any = await Game.findByPk(id_game, {raw: true});
+    if(check) {
+        return true;
+    } else {
+        return false;
+    };
+}
+
+/**
+ * Funzione che verifica se una partita nel database è in corso, dato il suo id.
+ */
+ export async function checkIfGameIsInProgress(id_game: number): Promise<boolean> {
+    let game: any = await Game.findByPk(id_game, {raw: true});
+
+    return game.in_progress;
+}
+
+/**
+ * Funzione che verifica se è il turno di attacco di un determinato giocatore, data la sua email e la partita.
+ */
+ export async function checkIfPlayerCanAttack(id_game: number, email: string): Promise<boolean> {
+    let game: any = await Game.findByPk(id_game, {raw: true});
+
+    if(game.attaccante === email) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+/**
+ * Funzione che verifica se una data mossa è ammissibile, ossia se viene attaccata una cella esistente sulla griglia.
+ */
+ export async function checkIfMoveCanBeDone(id_game: number, x : number, y: number): Promise<boolean> {
+    let game: any = await Game.findByPk(id_game, {raw: true});
+
+    let grid: Grid = JSON.parse(game.grid1);
+    let grid_size = grid.grid.length;
+
+    if(x >= 1 && x <= grid_size && y >= 1 && y <= grid_size) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+/**
+ * Funzione che verifica se la mossa non attacca una cella già attaccata in precedenza.
+ */
+ export async function checkIfMoveIsAlreadyDone(id_game: number, x : number, y: number): Promise<boolean> {
+    let game: any = await Game.findByPk(id_game, {raw: true});
+
+    let grid: Grid;
+
+    if(game.difensore === game.player1) {
+        grid = JSON.parse(game.grid1);
+    } else if(game.difensore === game.player2) {
+        grid = JSON.parse(game.grid2);
+    } else if(game.difensore === game.player3) {
+        grid = JSON.parse(game.grid3);
+    } else if(game.difensore === 'ia') {
+        grid = JSON.parse(game.gridIA)
+    }
+
+    let attacked: boolean = grid.grid[x - 1][y - 1].attacked;
+
+    if(!attacked) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+/**
+ * Funzione che restituisce una partita, dato il suo id.
+ */
+ export async function getGameById(id_game: number): Promise<any> {
+    let game: any = await Game.findByPk(id_game);
+    return game;
+}
+
+/**
+ * Funzione che crea una mossa nel database, dati i parametri.
+ */
+export async function createMove(id_game: number, attaccante: string, difensore: string, 
+                                 x: number, y: number, colpita_nave: boolean) {
+    await Move.create({
+        id_game: id_game,
+        attaccante: attaccante,
+        difensore: difensore,
+        x: x,
+        y: y,
+        colpita_nave: colpita_nave
+    }); 
 }

@@ -58,10 +58,10 @@ export function checkEmails(req: any, res: any, next: any): void {
 }
 
 /**
- * Verifica che la richiesta di creazione di una partita contenga una dimensione della griglia ammissibile (da 5 a 15).
+ * Verifica che la richiesta di creazione di una partita contenga una dimensione della griglia ammissibile (da 3 a 8).
  */
  export function checkGridSize(req: any, res: any, next: any): void {
-    if([5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15].includes(req.body.grid_size)) {
+    if([3, 4, 5, 6, 7, 8].includes(req.body.grid_size)) {
         console.log("checkGridSize: SUCCESS");
         next();
     } else {
@@ -100,5 +100,19 @@ export function checkMaximumShipSize(req: any, res: any, next: any): void {
     } else {
         console.log("checkMaximumShipSize: FAIL");
         next(ErrorEnum.InvalidMaximumShipSize);
+    }
+}
+
+/**
+ * Verifica che nella richiesta di effettuazione di una mossa i parametri x e y passati siano effettivamente degli
+ * interi;
+ */
+ export function checkXAndY(req: any, res: any, next: any): void {
+    if(Number.isInteger(req.body.x) && Number.isInteger(req.body.y)) {
+        console.log("checkXAndY: SUCCESS");
+        next();
+    } else {
+        console.log("checkXAndY: FAIL");
+        next(ErrorEnum.InvalidXAndY);
     }
 }
