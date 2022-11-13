@@ -2,8 +2,10 @@ import { ErrorEnum, ErrorFactory } from "./responses/error";
 import * as Model from "./models/model";
 import { SuccessEnum, SuccessFactory } from "./responses/success";
 import { Grid } from "./models/grid/grid";
-import e = require("express");
 import { getRandomInt } from "./models/grid/utility";
+import { Move } from "./models/moves/move";
+import fs = require('fs');
+import path = require('path');
 
 /**
  * Funzione che verifica se gli utenti specificati all'atto di creazione di una partita esistono o meno.
@@ -135,26 +137,14 @@ export async function createGame(body: any, res: any): Promise<void> {
                 player2: game.player2,
                 player3: game.player3,
                 ia: game.ia
-         });
+            });
+            
         } else {
             throw new Error();
         }
     } catch(error) {
         generateControllerErrors(ErrorEnum.InternalServer, error, res);
     }
-}
-
-/**
- * Funzione invocata dai metodi del Controller in caso di errori che sfrutta la ErrorFactory per generare gli errori da
- * restituire al client nella risposta.
- */
- function generateControllerErrors(error_enum: ErrorEnum, err: Error, res: any) {
-    const errorFactory = new ErrorFactory();
-    const error = errorFactory.getError(error_enum);
-    res.status(error.getStatus()).json({
-        status: error.getStatus(),
-        error: error.getMsg()
-    });
 }
 
 /**
@@ -706,4 +696,61 @@ export async function makeMoveVsIA(body: any, game: any, res: any): Promise<void
     } catch (error) {
         generateControllerErrors(ErrorEnum.InternalServer, error, res);
     }
+}
+
+/**
+ * Funzione che restituisce le mosse di una partita e genera o meno un file .csv a seconda delle richieste
+ * dell'utente.
+ */
+ export async function showGameMoves(body: any, res: any): Promise<void> {
+    try {
+        let moves: any[] = await Model.getMovesFromGame(body.id_game);
+
+        let moves_array: Move[] = [];
+        for(let i = 0; i < moves.length; i++) {
+            moves_array.push(new Move(
+                moves[i].id,
+                moves[i].id_game,
+                moves[i].attaccante,
+                moves[i].difensore,
+                moves[i].x,
+                moves[i].y,
+                moves[i].colpita_nave
+            ));
+        }
+
+        //Stampo il file csv se specificato
+        if(body.csv === true) {
+            let csv_file = `ID, ID_GAME, ATTACCANTE, DIFENSORE, X, Y, COLPITA_NAVE\n`;
+            for(let i = 0; i < moves_array.length; i++) {
+                csv_file += `${moves_array[i].id}, ${moves_array[i].id_game}, ${moves_array[i].attaccante},
+                ${moves_array[i].difensore}, ${moves_array[i].x}, ${moves_array[i].y}, ${moves_array[i].colpita_nave}\n`;
+            }
+            fs.writeFileSync('moves.txt', csv_file);
+        }
+
+        const successFactory = new SuccessFactory();
+        const success = successFactory.getSuccess(SuccessEnum.GameMovesShown);
+        res.status(success.getStatus()).json({
+            message: success.getMsg(),
+            id_game: body.id_game,
+            moves: JSON.parse(JSON.stringify(moves_array))
+        });
+    } catch (error) {
+        console.log(error);
+        generateControllerErrors(ErrorEnum.InternalServer, error, res);
+    }
+}
+
+/**
+ * Funzione invocata dai metodi del Controller in caso di errori che sfrutta la ErrorFactory per generare gli errori da
+ * restituire al client nella risposta.
+ */
+ function generateControllerErrors(error_enum: ErrorEnum, err: Error, res: any) {
+    const errorFactory = new ErrorFactory();
+    const error = errorFactory.getError(error_enum);
+    res.status(error.getStatus()).json({
+        status: error.getStatus(),
+        error: error.getMsg()
+    });
 }

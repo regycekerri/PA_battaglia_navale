@@ -252,3 +252,17 @@ export async function createMove(id_game: number, attaccante: string, difensore:
         colpita_nave: colpita_nave
     }); 
 }
+
+/**
+ * Restituisce le mosse di una determinata partita, dato il suo id.
+ */
+export async function getMovesFromGame(id_game: any): Promise<any> {
+    let moves: any = await Move.findAll({
+        where: {
+            id_game: id_game
+        },
+        order: [['id', 'ASC']]
+    });
+
+    return moves;
+}

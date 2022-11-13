@@ -116,3 +116,16 @@ export function checkMaximumShipSize(req: any, res: any, next: any): void {
         next(ErrorEnum.InvalidXAndY);
     }
 }
+
+/**
+ * Verifica che nella richiesta di consultazione delle mosse di una determinata partita il parametro csv sia booleano.
+ */
+ export function checkCSV(req: any, res: any, next: any): void {
+    if(typeof req.body.csv === 'boolean') {
+        console.log("checkCSV: SUCCESS");
+        next();
+    } else {
+        console.log("checkCSV: FAIL");
+        next(ErrorEnum.InvalidCSV);
+    }
+}

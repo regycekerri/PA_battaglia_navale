@@ -82,4 +82,20 @@ app.post('/game_state',
     }
 )
 
+/**
+ * Rotta di tipo POST che consente di visualizzare le mosse effettuate in una determinata partita.
+ */
+app.post('/game_moves', 
+    AuthMiddleware.checkAuthHeader,
+    AuthMiddleware.checkToken,
+    AuthMiddleware.verifyAndAuthenticate,
+    RouteMiddleware.checkCSV,
+    ControllerMiddleware.checkGameExistence,
+    ErrorHandlerMiddleware.errorHandler,
+    (req: any, res: any) => {
+        Controller.showGameMoves(req.body, res).then(() => {
+            console.log("Elenco delle mosse della partita restituito");
+        })
+    })
+
 app.listen(8080);

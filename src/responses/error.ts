@@ -189,6 +189,15 @@ class AlreadyDoneMoveError implements ErrorI {
     }
 }
 
+class InvalidCSVError implements ErrorI {
+    getStatus(): number {
+        return 400;
+    }
+    getMsg(): string {
+        return "Bad Request - The parameter csv must be a boolean (true: download csv of moves, false: no download)";
+    }
+}
+
 export enum ErrorEnum {
     NoAuthHeader,
     NoToken,
@@ -209,7 +218,8 @@ export enum ErrorEnum {
     NotYourTurn,
     InvalidXAndY,
     InvalidMove,
-    AlreadyDoneMove
+    AlreadyDoneMove,
+    InvalidCSV
 }
 
 /**
@@ -280,6 +290,9 @@ export class ErrorFactory {
                 break;
             case(ErrorEnum.AlreadyDoneMove):
                 error = new AlreadyDoneMoveError();
+                break;
+            case(ErrorEnum.InvalidCSV):
+                error = new InvalidCSVError();
                 break;
         }
 
