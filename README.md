@@ -68,10 +68,11 @@ Le richieste elencate di seguito possono essere testate attraverso ```http://loc
 ## Diagrammi UML <a name="diagrammi"></a>
 
 ### Use Case Diagram <a name="casi"></a>
-
+![Use Case Diagram](https://github.com/regycekerri/PA_battaglia_navale/blob/main/UML%20Diagram/casi%20d'uso.jpg)
 ***
 
 ### Interaction Overview Diagram <a name="interaction"></a>
+![Interactive Overview Diagram](https://github.com/regycekerri/PA_battaglia_navale/blob/main/UML%20Diagram/overview.jpg)
 
 ***
 
