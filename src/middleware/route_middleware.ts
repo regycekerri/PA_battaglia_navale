@@ -184,3 +184,29 @@ function isValidDate(date: string): boolean {
 
     return day > 0 && day <= monthlengths[month - 1];
 }
+
+/**
+ * Verifica che la richiesta di consultazione della classifica dei giocatori contenga il parametro order correttamente. 
+ */
+ export function checkOrder(req:any, res: any, next: any): void {
+    if(req.query.order === 'asc' || req.query.order === 'desc') {
+        console.log("checkOrder: SUCCESS");
+        next();
+    } else {
+        console.log("checkOrder: FAIL");
+        next(ErrorEnum.InvalidOrder);
+    }
+}
+
+/**
+ * Verifica che la richiesta di consultazione della classifica dei giocatori contenga il parametro by correttamente. 
+ */
+export function checkBy(req:any, res: any, next: any): void {
+    if(req.query.by === 'games' || req.query.by === 'wins' || req.query.by === 'losses') {
+        console.log("checkBy: SUCCESS");
+        next();
+    } else {
+        console.log("checkBy: FAIL");
+        next(ErrorEnum.InvalidBy);
+    }
+}

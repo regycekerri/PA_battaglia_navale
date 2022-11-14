@@ -5,8 +5,8 @@ import { Grid } from "./models/grid/grid";
 import { getRandomInt } from "./models/grid/utility";
 import { Move } from "./models/moves/move";
 import fs = require('fs');
-import path = require('path');
 import { Game } from "./models/games/game";
+import { Player } from "./models/players/player";
 
 /**
  * Funzione che verifica se gli utenti specificati all'atto di creazione di una partita esistono o meno.
@@ -874,10 +874,90 @@ export async function makeMoveVsIA(body: any, game: any, res: any): Promise<void
 }
 
 /**
+ * Funzione che restituisce la classifica dei giocatori, ordinata nel modo desiderato.
+ */
+ export async function showLeaderBoard(query: any, res: any): Promise<void> {
+    try {
+        let players: any[] = await Model.getAllPlayers();
+        let players_array: Player[] = [];
+        for(let i = 0; i < players.length; i++) {
+            players_array.push(new Player(players[i].email, players[i].username, 0, 0, 0));
+        }
+
+        let games: any[] = await Model.getAllFinishedGames();
+        let games_array: Game[] = [];
+        for(let i = 0; i < games.length; i++) {
+            games_array.push(new Game(
+                games[i].id,
+                games[i].player1,
+                games[i].player2,
+                games[i].player3,
+                games[i].ia,
+                games[i].grid1,
+                games[i].grid2,
+                games[i].grid3,
+                games[i].gridIA,
+                games[i].attaccante,
+                games[i].difensore,
+                games[i].in_progress,
+                games[i].vincitore,
+                games[i].perdente1,
+                games[i].perdente2,
+                games[i].start_date,
+                games[i].end_date
+            ));
+        }
+
+        players_array.forEach(player => {
+            let player_games: Game[] = games_array.filter(game => (game.player1 === player.email || game.player2 === player.email || game.player3 === player.email));
+            
+            player.total_games = player_games.length;
+            player.wins = player_games.filter(game => game.vincitore === player.email).length;
+            player.losses = player_games.filter(game => (game.perdente1 === player.email || game.perdente2 == player.email)).length;
+        });
+
+        if(query.order === 'asc') {
+            switch(query.by) {
+                case 'games':
+                    players_array.sort((a,b) => a.total_games - b.total_games);
+                    break;
+                case 'wins':
+                    players_array.sort((a,b) => a.wins - b.wins);
+                    break;
+                case 'losses':
+                    players_array.sort((a,b) => a.losses - b.losses);
+                    break;
+            }
+        } else {
+            switch(query.by) {
+                case 'games':
+                    players_array.sort((a,b) => b.total_games - a.total_games);
+                    break;
+                case 'wins':
+                    players_array.sort((a,b) => b.wins - a.wins);
+                    break;
+                case 'losses':
+                    players_array.sort((a,b) => b.losses - a.losses);
+                    break;
+            }
+        }
+
+        const successFactory = new SuccessFactory();
+        const success = successFactory.getSuccess(SuccessEnum.LeaderboardShown);
+        res.status(success.getStatus()).json({
+            message: success.getMsg(),
+            leaderboard: players_array
+        });
+    } catch (e) {
+        generateControllerErrors(ErrorEnum.InternalServer, e, res);
+    }
+}
+    
+/**
  * Funzione invocata dai metodi del Controller in caso di errori che sfrutta la ErrorFactory per generare gli errori da
  * restituire al client nella risposta.
  */
- function generateControllerErrors(error_enum: ErrorEnum, err: Error, res: any) {
+function generateControllerErrors(error_enum: ErrorEnum, err: Error, res: any) {
     const errorFactory = new ErrorFactory();
     const error = errorFactory.getError(error_enum);
     res.status(error.getStatus()).json({

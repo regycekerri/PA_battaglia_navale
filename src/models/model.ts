@@ -287,9 +287,31 @@ export async function getMovesFromGame(id_game: any): Promise<any> {
  export async function getPlayerMoves(email: string): Promise<any> {
     let moves: any = await Move.findAll({
         where: {
-            attaccante: email,
+            attaccante: email
         }
     });
 
     return moves;
+}
+
+/**
+ * Restituisce tutti i giocatori.
+ */
+ export async function getAllPlayers(): Promise<any> {
+    let players: any = await User.findAll();
+
+    return players;
+}
+
+/**
+ * Restituisce tutte le partite terminate.
+ */
+ export async function getAllFinishedGames(): Promise<any> {
+    let games: any = await Game.findAll({
+        where: {
+            in_progress: false
+        }
+    });
+
+    return games;
 }

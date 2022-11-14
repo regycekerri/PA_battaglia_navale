@@ -216,6 +216,24 @@ class InvalidDatesError implements ErrorI {
     }
 }
 
+class InvalidOrderError implements ErrorI {
+    getStatus(): number {
+        return 400;
+    }
+    getMsg(): string {
+        return "Bad Request - Order must be specified and has to be either 'asc' or 'desc'";
+    }
+}
+
+class InvalidByError implements ErrorI {
+    getStatus(): number {
+        return 400;
+    }
+    getMsg(): string {
+        return "Bad Request - By must be specified and has to be either 'games' or 'wins' or 'losses'";
+    }
+}
+
 export enum ErrorEnum {
     NoAuthHeader,
     NoToken,
@@ -239,7 +257,9 @@ export enum ErrorEnum {
     AlreadyDoneMove,
     InvalidCSV,
     InvalidEmail,
-    InvalidDates
+    InvalidDates,
+    InvalidOrder,
+    InvalidBy
 }
 
 /**
@@ -319,6 +339,12 @@ export class ErrorFactory {
                 break;
             case(ErrorEnum.InvalidDates):
                 error = new InvalidDatesError();
+                break;
+            case(ErrorEnum.InvalidOrder):
+                error = new InvalidOrderError();
+                break;
+            case(ErrorEnum.InvalidBy):
+                error = new InvalidByError();
                 break;
         }
 

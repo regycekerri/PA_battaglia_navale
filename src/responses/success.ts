@@ -54,12 +54,22 @@ class PlayerStatsShownSuccess implements SuccessI {
     }
 }
 
+class LeaderboardShownSuccess implements SuccessI {
+    getStatus(): number {
+        return 200;
+    }
+    getMsg(): string {
+        return "Ok - The leaderboard is shown below!";
+    }
+}
+
 export enum SuccessEnum {
     GameCreated,
     MoveExecuted,
     GameStateShown,
     GameMovesShown,
-    PlayerStatsShown
+    PlayerStatsShown,
+    LeaderboardShown
 }
 
 /**
@@ -85,6 +95,9 @@ export class SuccessFactory {
                 break;
             case(SuccessEnum.PlayerStatsShown):
                 success = new PlayerStatsShownSuccess();
+                break;
+            case(SuccessEnum.LeaderboardShown):
+                success = new LeaderboardShownSuccess();
                 break;
         }
 

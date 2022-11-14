@@ -5,6 +5,7 @@ import * as ControllerMiddleware from './middleware/controller_middleware';
 import * as ErrorHandlerMiddleware from './middleware/error_handling_middleware';
 import * as Controller from './controller';
 import { getGameById } from './models/model';
+import { ErrorEnum, ErrorFactory } from './responses/error';
 
 const app = express();
 
@@ -102,18 +103,45 @@ app.post('/game_moves',
 /**
  * Rotta di tipo POST che consente di visualizzare le statistiche di un determinato giocatore.
  */
- app.post('/player_stats', 
- AuthMiddleware.checkAuthHeader,
- AuthMiddleware.checkToken,
- AuthMiddleware.verifyAndAuthenticate,
- RouteMiddleware.checkPlayerStatsPayload,
- ControllerMiddleware.checkPlayerExistence,
- ErrorHandlerMiddleware.errorHandler,
- (req: any, res: any) => {
-    Controller.showPlayerStats(req.body, res).then(() => {
+app.post('/player_stats', 
+    AuthMiddleware.checkAuthHeader,
+    AuthMiddleware.checkToken,
+    AuthMiddleware.verifyAndAuthenticate,
+    RouteMiddleware.checkPlayerStatsPayload,
+    ControllerMiddleware.checkPlayerExistence,
+    ErrorHandlerMiddleware.errorHandler,
+    (req: any, res: any) => {
+        Controller.showPlayerStats(req.body, res).then(() => {
         console.log("Statistiche del giocatore restituite");
-    })
- }
+        })
+    }
 );
+
+/**
+ * Rotta di tipo GET che consente di visualizzare la classifica dei giocatori (nell'ordine desiderato).
+ */
+app.get('/leaderboard/', 
+    RouteMiddleware.checkOrder,
+    RouteMiddleware.checkBy,
+    ErrorHandlerMiddleware.errorHandler,
+    (req: any, res: any) => {
+        Controller.showLeaderBoard(req.query, res).then(() => {
+        console.log("Classifica dei giocatori restituita.");
+        })
+    }
+);
+
+/** 
+ * Gestione delle rotte non previste
+ */ 
+app.get('*',
+(req: any, res: any) => {
+    res.status(404).json({"status": 404, "error": "Not Found - This route doesn't exist"});
+});
+
+app.post('*',
+(req: any, res: any) => {
+    res.status(404).json({"status": 404, "error": "Not Found - This route doesn't exist"});
+});
 
 app.listen(8080);
