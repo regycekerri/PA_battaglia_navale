@@ -885,7 +885,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"id_game\": 7\r\n}",
+							"raw": "{\r\n    \"id_game\": 5\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -901,6 +901,358 @@
 							"port": "8080",
 							"path": [
 								"game_state"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "game_moves",
+			"item": [
+				{
+					"name": "game_moves_invalid_csv",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.MpuHA2k7MtWNY0k3SEzo0zfimbXF5LEkbj7peIfeyRk",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id_game\": 7,\r\n    \"csv\": 4\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/game_moves",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"game_moves"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "game_moves_not_existing_game",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.MpuHA2k7MtWNY0k3SEzo0zfimbXF5LEkbj7peIfeyRk",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id_game\": 7,\r\n    \"csv\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/game_moves",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"game_moves"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "game_moves_success",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.MpuHA2k7MtWNY0k3SEzo0zfimbXF5LEkbj7peIfeyRk",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id_game\": 2,\r\n    \"csv\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/game_moves",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"game_moves"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "game_moves_success+csv",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.MpuHA2k7MtWNY0k3SEzo0zfimbXF5LEkbj7peIfeyRk",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id_game\": 3,\r\n    \"csv\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/game_moves",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"game_moves"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "player_stats",
+			"item": [
+				{
+					"name": "player_stats_invalid_email",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.MpuHA2k7MtWNY0k3SEzo0zfimbXF5LEkbj7peIfeyRk",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": 3,\r\n    \"data_inizio\": 4,\r\n    \"data_fine\": 4\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/player_stats",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"player_stats"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "player_stats_invalid_dates_format",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.MpuHA2k7MtWNY0k3SEzo0zfimbXF5LEkbj7peIfeyRk",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"regy.cekerri@gmail.com\",\r\n    \"data_inizio\": \"2022-12-21\",\r\n    \"data_fine\": \"2023-01-01\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/player_stats",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"player_stats"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "player_stats_invalid_dates_wrong_order",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.MpuHA2k7MtWNY0k3SEzo0zfimbXF5LEkbj7peIfeyRk",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"regy.cekerri@gmail.com\",\r\n    \"data_inizio\": \"2022-12-21\",\r\n    \"data_fine\": \"2022-12-20\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/player_stats",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"player_stats"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "player_stats_not_existing_player",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.MpuHA2k7MtWNY0k3SEzo0zfimbXF5LEkbj7peIfeyRk",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"regy@gmail.com\",\r\n    \"data_inizio\": \"2022-12-21\",\r\n    \"data_fine\": \"2022-12-30\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/player_stats",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"player_stats"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "player_stats_success",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.MpuHA2k7MtWNY0k3SEzo0zfimbXF5LEkbj7peIfeyRk",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"regy.cekerri@gmail.com\",\r\n    \"data_inizio\": \"2021-09-21\",\r\n    \"data_fine\": \"2022-12-25\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/player_stats",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"player_stats"
 							]
 						}
 					},
