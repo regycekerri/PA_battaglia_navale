@@ -1,3 +1,6 @@
+/**
+ * Classe che rappresenta una singola mossa.
+ */
 export class Move {
     readonly id: number;
     readonly id_game: number;

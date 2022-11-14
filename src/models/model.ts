@@ -1,3 +1,4 @@
+import { Op } from 'sequelize';
 import { Grid } from './grid/grid';
 import { GridBuilder } from './grid/gridbuilder';
 import { getRandomInt } from './grid/utility';
@@ -262,6 +263,32 @@ export async function getMovesFromGame(id_game: any): Promise<any> {
             id_game: id_game
         },
         order: [['id', 'ASC']]
+    });
+
+    return moves;
+}
+
+/**
+ * Restituisce le partite di un determinato giocatore, data la sua email.
+ */
+ export async function getPlayerGames(email: string): Promise<any> {
+    let games: any = await Game.findAll({
+        where: {
+            [Op.or]: [{player1: email}, {player2: email}, {player3: email}]
+        }
+    });
+
+    return games;
+}
+
+/**
+ * Restituisce le mosse effettuate da un giocatore.
+ */
+ export async function getPlayerMoves(email: string): Promise<any> {
+    let moves: any = await Move.findAll({
+        where: {
+            attaccante: email,
+        }
     });
 
     return moves;

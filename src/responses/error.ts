@@ -198,6 +198,24 @@ class InvalidCSVError implements ErrorI {
     }
 }
 
+class InvalidEmailError implements ErrorI {
+    getStatus(): number {
+        return 400;
+    }
+    getMsg(): string {
+        return "Bad Request - The email must be a string (not null or empty)";
+    }
+}
+
+class InvalidDatesError implements ErrorI {
+    getStatus(): number {
+        return 400;
+    }
+    getMsg(): string {
+        return "Bad Request - The dates must be valid and the second one must come after the first one";
+    }
+}
+
 export enum ErrorEnum {
     NoAuthHeader,
     NoToken,
@@ -219,7 +237,9 @@ export enum ErrorEnum {
     InvalidXAndY,
     InvalidMove,
     AlreadyDoneMove,
-    InvalidCSV
+    InvalidCSV,
+    InvalidEmail,
+    InvalidDates
 }
 
 /**
@@ -293,6 +313,12 @@ export class ErrorFactory {
                 break;
             case(ErrorEnum.InvalidCSV):
                 error = new InvalidCSVError();
+                break;
+            case(ErrorEnum.InvalidEmail):
+                error = new InvalidEmailError();
+                break;
+            case(ErrorEnum.InvalidDates):
+                error = new InvalidDatesError();
                 break;
         }
 

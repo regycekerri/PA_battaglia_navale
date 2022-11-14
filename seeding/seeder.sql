@@ -82,6 +82,17 @@ INSERT INTO game (id, player1, player2, player3, ia, grid1, grid2, grid3, gridIA
   '{"grid":[[{"type":1,"attacked":false},{"type":0,"attacked":false},{"type":0,"attacked":false}],[{"type":0,"attacked":false},{"type":0,"attacked":false},{"type":0,"attacked":false}],[{"type":0,"attacked":false},{"type":0,"attacked":false},{"type":0,"attacked":false}]]}',
   '{"grid":[[{"type":0,"attacked":false},{"type":0,"attacked":false},{"type":0,"attacked":false}],[{"type":0,"attacked":false},{"type":0,"attacked":false},{"type":0,"attacked":false}],[{"type":0,"attacked":false},{"type":1,"attacked":false},{"type":0,"attacked":false}]]}',
   NULL, "regy.cekerri@gmail.com", "davide.malatesta@gmail.com", TRUE, NULL, NULL, NULL, "2021-12-25", NULL
+  ),
+  (6, "davide.malatesta@gmail.com", "regy.cekerri@gmail.com", NULL, FALSE,
+  '{"grid":[[{"type":0,"attacked":false},{"type":0,"attacked":false},{"type":0,"attacked":false}],[{"type":0,"attacked":false},{"type":0,"attacked":false},{"type":0,"attacked":true}],[{"type":0,"attacked":true},{"type":0,"attacked":false},{"type":0,"attacked":false}]]}',
+  '{"grid":[[{"type":1,"attacked":false},{"type":0,"attacked":false},{"type":0,"attacked":false}],[{"type":0,"attacked":false},{"type":0,"attacked":false},{"type":0,"attacked":false}],[{"type":0,"attacked":false},{"type":0,"attacked":true},{"type":1,"attacked":false}]]}',
+  NULL, NULL, NULL, NULL, FALSE, "davide.malatesta@gmail.com", "regy.cekerri@gmail.com", NULL, "2022-11-14", "2022-11-14"
+  ),
+  (7, "regy.cekerri@gmail.com", "neil.armstrong@gmail.com", "davide.malatesta@gmail.com", FALSE,
+  '{"grid":[[{"type":0,"attacked":false},{"type":0,"attacked":false},{"type":0,"attacked":false}],[{"type":0,"attacked":true},{"type":1,"attacked":false},{"type":0,"attacked":false}],[{"type":0,"attacked":true},{"type":0,"attacked":false},{"type":0,"attacked":false}]]}',
+  '{"grid":[[{"type":0,"attacked":false},{"type":0,"attacked":false},{"type":0,"attacked":true}],[{"type":0,"attacked":false},{"type":0,"attacked":true},{"type":0,"attacked":false}],[{"type":0,"attacked":true},{"type":0,"attacked":false},{"type":0,"attacked":false}]]}',
+  '{"grid":[[{"type":0,"attacked":false},{"type":0,"attacked":false},{"type":0,"attacked":true}],[{"type":0,"attacked":false},{"type":0,"attacked":false},{"type":0,"attacked":false}],[{"type":0,"attacked":false},{"type":0,"attacked":false},{"type":0,"attacked":false}]]}',
+  NULL, NULL, NULL, FALSE, "regy.cekerri@gmail.com", "neil.armstrong@gmail.com", "davide.malatesta@gmail.com", "2022-11-14", "2022-11-14"
   );
 
 INSERT INTO move (id_game, id, attaccante, difensore, x, y, colpita_nave) VALUES 
@@ -118,6 +129,13 @@ INSERT INTO move (id_game, id, attaccante, difensore, x, y, colpita_nave) VALUES
   (2, 31, "francesco.schettino@gmail.com", "capitano.uncino@gmail.com", 3, 3, FALSE),
   (2, 32, "capitano.uncino@gmail.com", "francesco.schettino@gmail.com", 2, 1, TRUE),
   (3, 33, "horatio.nelson@gmail.com", "ia", 1, 1, FALSE),
-  (3, 34, "ia", "horatio.nelson@gmail.com", 1, 2, FALSE);
-
-
+  (3, 34, "ia", "horatio.nelson@gmail.com", 1, 2, FALSE),
+  (6, 35, "davide.malatesta@gmail.com", "regy.cekerri@gmail.com", 2, 3, TRUE),
+  (6, 36, "regy.cekerri@gmail.com", "davide.malatesta@gmail.com", 3, 2, FALSE),
+  (6, 37, "davide.malatesta@gmail.com", "regy.cekerri@gmail.com", 3, 1, TRUE),
+  (7, 38, "regy.cekerri@gmail.com", "neil.armstrong@gmail.com", 1, 3, FALSE),
+  (7, 39, "davide.malatesta@gmail.com", "regy.cekerri@gmail.com", 2, 1, FALSE),
+  (7, 40, "neil.armstrong@gmail.com", "davide.malatesta@gmail.com", 1, 3, TRUE),
+  (7, 41, "regy.cekerri@gmail.com", "neil.armstrong@gmail.com", 2, 2, FALSE),
+  (7, 42, "neil.armstrong@gmail.com", "regy.cekerri@gmail.com", 3, 1, FALSE),
+  (7, 43, "regy.cekerri@gmail.com", "neil.armstrong@gmail.com", 3, 1, TRUE);

@@ -80,7 +80,7 @@ app.post('/game_state',
             console.log("Stato della partita restituito");
         });
     }
-)
+);
 
 /**
  * Rotta di tipo POST che consente di visualizzare le mosse effettuate in una determinata partita.
@@ -96,6 +96,24 @@ app.post('/game_moves',
         Controller.showGameMoves(req.body, res).then(() => {
             console.log("Elenco delle mosse della partita restituito");
         })
+    }
+);
+
+/**
+ * Rotta di tipo POST che consente di visualizzare le statistiche di un determinato giocatore.
+ */
+ app.post('/player_stats', 
+ AuthMiddleware.checkAuthHeader,
+ AuthMiddleware.checkToken,
+ AuthMiddleware.verifyAndAuthenticate,
+ RouteMiddleware.checkPlayerStatsPayload,
+ ControllerMiddleware.checkPlayerExistence,
+ ErrorHandlerMiddleware.errorHandler,
+ (req: any, res: any) => {
+    Controller.showPlayerStats(req.body, res).then(() => {
+        console.log("Statistiche del giocatore restituite");
     })
+ }
+);
 
 app.listen(8080);

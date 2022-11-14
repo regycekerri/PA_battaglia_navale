@@ -6,6 +6,7 @@ import { getRandomInt } from "./models/grid/utility";
 import { Move } from "./models/moves/move";
 import fs = require('fs');
 import path = require('path');
+import { Game } from "./models/games/game";
 
 /**
  * Funzione che verifica se gli utenti specificati all'atto di creazione di una partita esistono o meno.
@@ -721,12 +722,11 @@ export async function makeMoveVsIA(body: any, game: any, res: any): Promise<void
 
         //Stampo il file csv se specificato
         if(body.csv === true) {
-            let csv_file = `ID, ID_GAME, ATTACCANTE, DIFENSORE, X, Y, COLPITA_NAVE\n`;
+            let csv_file: string = `ID; ID_GAME; ATTACCANTE; DIFENSORE; X; Y; COLPITA_NAVE\n`;
             for(let i = 0; i < moves_array.length; i++) {
-                csv_file += `${moves_array[i].id}, ${moves_array[i].id_game}, ${moves_array[i].attaccante},
-                ${moves_array[i].difensore}, ${moves_array[i].x}, ${moves_array[i].y}, ${moves_array[i].colpita_nave}\n`;
+                csv_file += `${moves_array[i].id}; ${moves_array[i].id_game}; ${moves_array[i].attaccante}; ${moves_array[i].difensore}; ${moves_array[i].x}; ${moves_array[i].y}; ${moves_array[i].colpita_nave}\n`;
             }
-            fs.writeFileSync('moves.txt', csv_file);
+            fs.writeFileSync('moves.csv', csv_file);
         }
 
         const successFactory = new SuccessFactory();
@@ -734,12 +734,143 @@ export async function makeMoveVsIA(body: any, game: any, res: any): Promise<void
         res.status(success.getStatus()).json({
             message: success.getMsg(),
             id_game: body.id_game,
-            moves: JSON.parse(JSON.stringify(moves_array))
+            moves: moves_array
         });
     } catch (error) {
         console.log(error);
         generateControllerErrors(ErrorEnum.InternalServer, error, res);
     }
+}
+
+/**
+ * Funzione che restituisce le statistiche di un determinato giocatore, riferite ad un intervallo di tempo.
+ */
+ export async function showPlayerStats(body: any, res: any): Promise<void> {
+    try {
+        let games: any[] = await Model.getPlayerGames(body.email);
+        let data_inizio: Date = new Date(body.data_inizio);
+        let data_fine: Date = new Date(body.data_fine);
+
+        //Partite totali (terminate e in corso)
+        let partite_totali: Game[] = [];
+        for(let i = 0; i < games.length; i++) {
+            partite_totali.push(new Game(
+                games[i].id,
+                games[i].player1,
+                games[i].player2,
+                games[i].player3,
+                games[i].ia,
+                games[i].grid1,
+                games[i].grid2,
+                games[i].grid3,
+                games[i].gridIA,
+                games[i].attaccante,
+                games[i].difensore,
+                games[i].in_progress,
+                games[i].vincitore,
+                games[i].perdente1,
+                games[i].perdente2,
+                games[i].start_date,
+                games[i].end_date
+            ))
+        }
+
+        //Trovo le partite giocate (terminate) nell'intervallo di tempo specificato
+        let partite_giocate: Game[] = partite_totali.filter(element => element.in_progress === false)
+        .filter(element => (element.start_date >= data_inizio && element.end_date <= data_fine));
+
+        //Se non ha giocato nessuna partita...
+        if(partite_giocate.length === 0) {
+            const successFactory = new SuccessFactory();
+            const success = successFactory.getSuccess(SuccessEnum.PlayerStatsShown);
+            res.status(success.getStatus()).json({
+                message: success.getMsg(),
+                player: body.email,
+                partite_giocate: partite_giocate.length,
+                partite_vinte: 0,
+                partite_perse: 0,
+                numero_minimo_di_mosse_per_partita: 0,
+                numero_massimo_di_mosse_per_partita: 0,
+                numero_medio_di_mosse_per_partita: 0,
+                deviazione_standard_delle_mosse_per_partita: 0
+            });
+        } else {
+            //Trovo le partite vinte
+            let partite_vinte: Game[] = partite_giocate.filter(element => element.vincitore === body.email);
+        
+            //Trovo le partite perse
+            let partite_perse: Game[] = partite_giocate.filter(element => 
+                (element.perdente1 === body.email) || (element.perdente2 === body.email));
+        
+            //Mosse effettuate dal giocatore
+            let moves: any[] = await Model.getPlayerMoves(body.email);
+            let moves_array: Move[] = [];
+
+            for(let i = 0; i < moves.length; i++) {
+                moves_array.push(new Move(
+                    moves[i].id,
+                    moves[i].id_game,
+                    moves[i].attaccante,
+                    moves[i].difensore,
+                    moves[i].x,
+                    moves[i].y,
+                    moves[i].colpita_nave
+                ));
+            }
+
+            let moves_per_game: number[] = [];
+
+            partite_giocate.forEach(game => {
+                moves_per_game.push(moves_array.filter(element => element.id_game === game.id).length);
+            });
+
+            //Calcolo la media
+            let media: number = moves_per_game.reduce((a, b) => a + b) / moves_per_game.length;
+
+            //Calcolo la deviazione standard
+            let scarti_quadratici: number[] = moves_per_game.map(moves => Math.pow(moves - media, 2))
+
+            let varianza: number;
+            if(moves_per_game.length > 1) {
+                varianza = scarti_quadratici.reduce((a, b) => a + b) / (moves_per_game.length - 1);
+            } else {
+                varianza = 0;
+            }
+
+            let deviazione_standard = Math.sqrt(varianza);
+
+            const successFactory = new SuccessFactory();
+            const success = successFactory.getSuccess(SuccessEnum.PlayerStatsShown);
+            res.status(success.getStatus()).json({
+                message: success.getMsg(),
+                player: body.email,
+                partite_giocate: partite_giocate.length,
+                partite_vinte: partite_vinte.length,
+                partite_perse: partite_perse.length,
+                numero_minimo_di_mosse_per_partita: Math.min(...moves_per_game),
+                numero_massimo_di_mosse_per_partita: Math.max(...moves_per_game),
+                numero_medio_di_mosse_per_partita: media,
+                deviazione_standard_delle_mosse_per_partita: deviazione_standard
+            });
+        }
+    } catch (error) {
+        console.log(error);
+        generateControllerErrors(ErrorEnum.InternalServer, error, res);
+    }
+}
+
+/**
+ * Funzione che verifica se il giocatore specificato esiste o meno.
+ */
+ export async function checkIfPlayerExists(email: string, res: any): Promise<boolean> {
+    let check: boolean = false;
+
+    try {
+        check = await Model.checkIfUserExists(email);
+    } catch (e) {
+        generateControllerErrors(ErrorEnum.InternalServer, e, res);
+    }
+    return check;
 }
 
 /**

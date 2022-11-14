@@ -129,3 +129,58 @@ export function checkMaximumShipSize(req: any, res: any, next: any): void {
         next(ErrorEnum.InvalidCSV);
     }
 }
+
+/**
+ * Verifica che la richiesta di consultazione delle statistiche di un giocatore contenga dei parametri formalmente 
+ * corretti. 
+ */
+ export function checkPlayerStatsPayload(req: any, res: any, next: any): void {
+    if(typeof req.body.email === 'string' && req.body.email !== null && req.body.email !== "") {
+        console.log("checkEmail: SUCCESS");
+
+        let data_inizio: string = req.body.data_inizio;
+        let data_fine: string = req.body.data_fine;
+
+        if(isValidDate(data_inizio) && isValidDate(data_fine)) {
+            let d1: Date = new Date(data_inizio);
+            let d2: Date = new Date(data_fine);
+
+            if(d2 >= d1) {
+                console.log("checkDates: SUCCESS");
+                next();
+            } else {
+                console.log("checkDate: FAIL");
+                next(ErrorEnum.InvalidDates);
+            }
+        } else {
+            console.log("checkDates: FAIL");
+            next(ErrorEnum.InvalidDates);
+        }
+
+    } else {
+        console.log("checkEmail: FAIL");
+        next(ErrorEnum.InvalidEmail);
+    }
+}
+
+/**
+ * Funzione che verifica se una data è valida o meno (deve essere nel formato YYYY-MM-DD).
+ */
+function isValidDate(date: string): boolean {
+    let parts: string[] = date.split('-');
+    let day: number = parseInt(parts[2]);
+    let month: number = parseInt(parts[1]);
+    let year: number = parseInt(parts[0]);
+
+    if(year < 2021 || year > 2100 || month <= 0 || month > 12) {
+        return false;
+    }
+
+    let monthlengths: number[] = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+    if(year % 400 == 0 || (year % 100 != 0 && year % 4 == 0)) {
+        monthlengths[1] = 29;
+    }
+
+    return day > 0 && day <= monthlengths[month - 1];
+}

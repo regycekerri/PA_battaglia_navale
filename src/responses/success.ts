@@ -45,12 +45,21 @@ class GameMovesShownSuccess implements SuccessI {
     }
 }
 
+class PlayerStatsShownSuccess implements SuccessI {
+    getStatus(): number {
+        return 200;
+    }
+    getMsg(): string {
+        return "Ok - The player's stats are shown below!";
+    }
+}
 
 export enum SuccessEnum {
     GameCreated,
     MoveExecuted,
     GameStateShown,
-    GameMovesShown
+    GameMovesShown,
+    PlayerStatsShown
 }
 
 /**
@@ -73,6 +82,9 @@ export class SuccessFactory {
                 break;
             case(SuccessEnum.GameMovesShown):
                 success = new GameMovesShownSuccess();
+                break;
+            case(SuccessEnum.PlayerStatsShown):
+                success = new PlayerStatsShownSuccess();
                 break;
         }
 

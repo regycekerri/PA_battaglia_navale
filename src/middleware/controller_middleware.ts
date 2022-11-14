@@ -146,3 +146,18 @@ export function checkMove1(req: any, res: any, next: any): void {
         }
     })
 }
+
+/**
+ * Verifica che l'utente specificato nella consultazione delle statistiche esista effettivamente nel database.
+ */
+ export function checkPlayerExistence(req: any, res: any, next: any) : void {
+    Controller.checkIfPlayerExists(req.body.email, res).then((check) => {
+        if(check) {
+            console.log("checkPlayerExistence: SUCCESS");
+            next();
+        } else {
+            console.log("checkPlayerExistence: FAIL");
+            next(ErrorEnum.NotExistingUser);
+        }
+    })
+}
