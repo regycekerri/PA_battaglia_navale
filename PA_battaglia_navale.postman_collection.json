@@ -1259,6 +1259,103 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "leaderboard",
+			"item": [
+				{
+					"name": "leaderboard_invalid_order",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/leaderboard?order='ascend'",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"leaderboard"
+							],
+							"query": [
+								{
+									"key": "order",
+									"value": "'ascend'"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "leaderboard_invalid_by",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/leaderboard?order=asc&by=mean",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"leaderboard"
+							],
+							"query": [
+								{
+									"key": "order",
+									"value": "asc"
+								},
+								{
+									"key": "by",
+									"value": "mean"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "leaderboard_success",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/leaderboard?order=desc&by=wins",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"leaderboard"
+							],
+							"query": [
+								{
+									"key": "order",
+									"value": "desc"
+								},
+								{
+									"key": "by",
+									"value": "wins"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	]
 }
