@@ -5,7 +5,7 @@ import * as ControllerMiddleware from './middleware/controller_middleware';
 import * as ErrorHandlerMiddleware from './middleware/error_handling_middleware';
 import * as Controller from './controller';
 import { getGameById } from './models/model';
-import { ErrorEnum, ErrorFactory } from './responses/error';
+import * as jwt from 'jsonwebtoken';
 
 const app = express();
 
@@ -17,7 +17,14 @@ app.use(express.json());
 app.post('/create_game',
     AuthMiddleware.checkAuthHeader,
     AuthMiddleware.checkToken,
-    AuthMiddleware.verifyAndAuthenticate,
+    AuthMiddleware.verifySecretKey,
+    AuthMiddleware.authenticateUser,
+    (req: any, res: any, next: any) => {
+        //Aggiorno il body
+        let decoded = JSON.parse(JSON.stringify(jwt.decode(req.token)));
+        req.body.email1 = decoded.richiedente;
+        next();
+    },
     RouteMiddleware.checkGameMode,
     RouteMiddleware.checkEmails,
     RouteMiddleware.checkGridSize,
@@ -40,8 +47,15 @@ app.post('/create_game',
 app.post('/make_move', 
     AuthMiddleware.checkAuthHeader, 
     AuthMiddleware.checkToken, 
-    AuthMiddleware.verifyAndAuthenticate,
-    ControllerMiddleware.checkGameExistence,
+    AuthMiddleware.verifySecretKey,
+    AuthMiddleware.authenticateUser,
+    (req: any, res: any, next: any) => {
+        //Aggiorno il body
+        let decoded = JSON.parse(JSON.stringify(jwt.decode(req.token)));
+        req.body.email = decoded.richiedente;
+        next();
+    },
+    ControllerMiddleware.checkGameExistencePOST,
     ControllerMiddleware.checkGameState,
     ControllerMiddleware.checkPlayerTurn,
     RouteMiddleware.checkXAndY,
@@ -68,50 +82,53 @@ app.post('/make_move',
 );
 
 /**
- * Rotta di tipo POST che consente di visualizzare lo stato di una partita.
+ * Rotta di tipo GET che consente di visualizzare lo stato di una partita.
  */
-app.post('/game_state',
+app.get('/game_state/:id_game',
     AuthMiddleware.checkAuthHeader,
     AuthMiddleware.checkToken,
-    AuthMiddleware.verifyAndAuthenticate,
-    ControllerMiddleware.checkGameExistence,
+    AuthMiddleware.verifySecretKey,
+    AuthMiddleware.authenticateUser,
+    ControllerMiddleware.checkGameExistenceGET,
     ErrorHandlerMiddleware.errorHandler,
     (req: any, res: any) => {
-        Controller.showGameState(req.body, res).then(() => {
+        Controller.showGameState(req.params, res).then(() => {
             console.log("Stato della partita restituito");
         });
     }
 );
 
 /**
- * Rotta di tipo POST che consente di visualizzare le mosse effettuate in una determinata partita.
+ * Rotta di tipo GET che consente di visualizzare le mosse effettuate in una determinata partita.
  */
-app.post('/game_moves', 
+app.get('/game_moves/:id_game/', 
     AuthMiddleware.checkAuthHeader,
     AuthMiddleware.checkToken,
-    AuthMiddleware.verifyAndAuthenticate,
+    AuthMiddleware.verifySecretKey,
+    AuthMiddleware.authenticateUser,
     RouteMiddleware.checkCSV,
-    ControllerMiddleware.checkGameExistence,
+    ControllerMiddleware.checkGameExistenceGET,
     ErrorHandlerMiddleware.errorHandler,
     (req: any, res: any) => {
-        Controller.showGameMoves(req.body, res).then(() => {
+        Controller.showGameMoves(req, res).then(() => {
             console.log("Elenco delle mosse della partita restituito");
         })
     }
 );
 
 /**
- * Rotta di tipo POST che consente di visualizzare le statistiche di un determinato giocatore.
+ * Rotta di tipo GET che consente di visualizzare le statistiche di un determinato giocatore.
  */
-app.post('/player_stats', 
+app.get('/player_stats/:email/', 
     AuthMiddleware.checkAuthHeader,
     AuthMiddleware.checkToken,
-    AuthMiddleware.verifyAndAuthenticate,
-    RouteMiddleware.checkPlayerStatsPayload,
+    AuthMiddleware.verifySecretKey,
+    AuthMiddleware.authenticateUser,
+    RouteMiddleware.checkPlayerStatsParams,
     ControllerMiddleware.checkPlayerExistence,
     ErrorHandlerMiddleware.errorHandler,
     (req: any, res: any) => {
-        Controller.showPlayerStats(req.body, res).then(() => {
+        Controller.showPlayerStats(req, res).then(() => {
         console.log("Statistiche del giocatore restituite");
         })
     }
@@ -120,13 +137,31 @@ app.post('/player_stats',
 /**
  * Rotta di tipo GET che consente di visualizzare la classifica dei giocatori (nell'ordine desiderato).
  */
-app.get('/leaderboard/', 
+app.get('/leaderboard', 
     RouteMiddleware.checkOrder,
     RouteMiddleware.checkBy,
     ErrorHandlerMiddleware.errorHandler,
     (req: any, res: any) => {
         Controller.showLeaderBoard(req.query, res).then(() => {
         console.log("Classifica dei giocatori restituita.");
+        })
+    }
+);
+
+/**
+ * Rotta di tipo POST (accessibile soltanto dall'admin) che consente di ricaricare i token di un determinato utente.
+ */
+app.post('/refill_tokens',
+    AuthMiddleware.checkAuthHeader,
+    AuthMiddleware.checkToken,
+    AuthMiddleware.verifySecretKey,
+    AuthMiddleware.authenticateAdmin,
+    ControllerMiddleware.checkUserExistence,
+    RouteMiddleware.checkTokens,
+    ErrorHandlerMiddleware.errorHandler,
+    (req: any, res: any) => {
+        Controller.refillTokens(req, res).then(() => {
+            console.log("Ricarica dei token effettuata con successo");
         })
     }
 );

@@ -1,4 +1,5 @@
 import { ErrorEnum } from "../responses/error";
+import * as jwt from 'jsonwebtoken';
 
 /**
  * Verifica che la richiesta di creazione di una partita contenga una tipologia di partita ammissibile (0, 1 o 2).
@@ -121,7 +122,7 @@ export function checkMaximumShipSize(req: any, res: any, next: any): void {
  * Verifica che nella richiesta di consultazione delle mosse di una determinata partita il parametro csv sia booleano.
  */
  export function checkCSV(req: any, res: any, next: any): void {
-    if(typeof req.body.csv === 'boolean') {
+    if(req.query.csv === 'true' || req.query.csv === 'false') {
         console.log("checkCSV: SUCCESS");
         next();
     } else {
@@ -134,12 +135,10 @@ export function checkMaximumShipSize(req: any, res: any, next: any): void {
  * Verifica che la richiesta di consultazione delle statistiche di un giocatore contenga dei parametri formalmente 
  * corretti. 
  */
- export function checkPlayerStatsPayload(req: any, res: any, next: any): void {
-    if(typeof req.body.email === 'string' && req.body.email !== null && req.body.email !== "") {
-        console.log("checkEmail: SUCCESS");
-
-        let data_inizio: string = req.body.data_inizio;
-        let data_fine: string = req.body.data_fine;
+ export function checkPlayerStatsParams(req: any, res: any, next: any): void {
+    if(req.query.data_inizio !== undefined && req.query.data_fine !== undefined) {
+        let data_inizio: string = req.query.data_inizio;
+        let data_fine: string = req.query.data_fine;
 
         if(isValidDate(data_inizio) && isValidDate(data_fine)) {
             let d1: Date = new Date(data_inizio);
@@ -156,10 +155,8 @@ export function checkMaximumShipSize(req: any, res: any, next: any): void {
             console.log("checkDates: FAIL");
             next(ErrorEnum.InvalidDates);
         }
-
     } else {
-        console.log("checkEmail: FAIL");
-        next(ErrorEnum.InvalidEmail);
+        next(ErrorEnum.InvalidDates);
     }
 }
 
@@ -208,5 +205,19 @@ export function checkBy(req:any, res: any, next: any): void {
     } else {
         console.log("checkBy: FAIL");
         next(ErrorEnum.InvalidBy);
+    }
+}
+
+/**
+ * Verifica che la richiesta di ricarica dei token di un utente contenga il parametro corrispondente ai token di 
+ * tipo numerico.
+ */
+ export function checkTokens(req:any, res: any, next: any): void {
+    if(typeof req.body.tokens === 'number' && req.body.tokens > 0 && req.body.tokens <= 100 ) {
+        console.log("checkTokens: SUCCESS");
+        next();
+    } else {
+        console.log("checkTokens: FAIL");
+        next(ErrorEnum.InvalidTokens);
     }
 }

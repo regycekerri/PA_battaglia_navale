@@ -70,9 +70,29 @@ import { ErrorEnum } from "../responses/error";
 /**
  * Verifica che l'id specificato (che dev'essere un intero) corrisponda ad una partita esistente nel database.
  */
-export function checkGameExistence(req: any, res: any, next: any): void {
+ export function checkGameExistencePOST(req: any, res: any, next: any): void {
     if(Number.isInteger(req.body.id_game)) {
         Controller.checkIfGameExists(req.body.id_game, res).then((check) => {
+            if(check) {
+                console.log("checkGameExistence: SUCCESS");
+                next();
+            } else {
+                console.log("checkGameExistence: FAIL");
+                next(ErrorEnum.NotExistingGame);
+            }
+        }) 
+    } else {
+        console.log("checkGameExistence: FAIL");
+        next(ErrorEnum.InvalidIdGame);
+    }
+}
+
+/**
+ * Verifica che l'id specificato (che dev'essere un intero) corrisponda ad una partita esistente nel database.
+ */
+export function checkGameExistenceGET(req: any, res: any, next: any): void {
+    if(Number.isInteger(Number(req.params.id_game))) {
+        Controller.checkIfGameExists(req.params.id_game, res).then((check) => {
             if(check) {
                 console.log("checkGameExistence: SUCCESS");
                 next();
@@ -151,7 +171,7 @@ export function checkMove1(req: any, res: any, next: any): void {
  * Verifica che l'utente specificato nella consultazione delle statistiche esista effettivamente nel database.
  */
  export function checkPlayerExistence(req: any, res: any, next: any) : void {
-    Controller.checkIfPlayerExists(req.body.email, res).then((check) => {
+    Controller.checkIfPlayerExists(req.params.email, res).then((check) => {
         if(check) {
             console.log("checkPlayerExistence: SUCCESS");
             next();
@@ -160,4 +180,24 @@ export function checkMove1(req: any, res: any, next: any): void {
             next(ErrorEnum.NotExistingUser);
         }
     })
+}
+
+/**
+ * Verifica che l'utente specificato per il rifornimento di token esista effettivamente.
+ */
+ export function checkUserExistence(req: any, res: any, next: any) : void {
+    if(typeof req.body.email === 'string' && req.body.email !== "" && req.body.email !== null) {
+        Controller.checkIfPlayerExists(req.body.email, res).then((check) => {
+            if(check) {
+                console.log("checkUserExistence: SUCCESS");
+                next();
+            } else {
+                console.log("checkUserExistence: FAIL");
+                next(ErrorEnum.NotExistingUser);
+            }
+        })
+    } else {
+        console.log("checkUserExistence: FAIL");
+        next(ErrorEnum.InvalidEmail);
+    }
 }

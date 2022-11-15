@@ -63,13 +63,23 @@ class LeaderboardShownSuccess implements SuccessI {
     }
 }
 
+class RefillDoneSuccess implements SuccessI {
+    getStatus(): number {
+        return 200;
+    }
+    getMsg(): string {
+        return "Ok - The user's tokens were successfully refilled!";
+    }
+}
+
 export enum SuccessEnum {
     GameCreated,
     MoveExecuted,
     GameStateShown,
     GameMovesShown,
     PlayerStatsShown,
-    LeaderboardShown
+    LeaderboardShown,
+    RefillDone
 }
 
 /**
@@ -99,8 +109,10 @@ export class SuccessFactory {
             case(SuccessEnum.LeaderboardShown):
                 success = new LeaderboardShownSuccess();
                 break;
+            case(SuccessEnum.RefillDone):
+                success = new RefillDoneSuccess();
+                break;
         }
-
         return success;
     }
 }

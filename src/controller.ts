@@ -111,38 +111,33 @@ export async function createGame(body: any, res: any): Promise<void> {
     try {
         let game: any = await Model.createGame(body);
 
-        if(game) {
-            if(game_mode === 0) {
-                await Model.decreaseTokens(email1, 0.4);
-                await Model.setUserState(email1, true);
-            } else if(game_mode === 1) {
-                await Model.decreaseTokens(email1, 0.4);
-                await Model.decreaseTokens(email2, 0.4);
-                await Model.setUserState(email1, true);
-                await Model.setUserState(email2, true);
-            } else {
-                await Model.decreaseTokens(email1, 0.4);
-                await Model.decreaseTokens(email2, 0.4);
-                await Model.decreaseTokens(email3, 0.4);
-                await Model.setUserState(email1, true);
-                await Model.setUserState(email2, true);
-                await Model.setUserState(email3, true);
-            }
-    
-            const successFactory = new SuccessFactory();
-            const success = successFactory.getSuccess(SuccessEnum.GameCreated);
-            res.status(success.getStatus()).json({
-                message: success.getMsg(),
-                id_game: game.id,
-                player1: game.player1,
-                player2: game.player2,
-                player3: game.player3,
-                ia: game.ia
-            });
-            
+        if(game_mode === 0) {
+            await Model.decreaseTokens(email1, 0.4);
+            await Model.setUserState(email1, true);
+        } else if(game_mode === 1) {
+            await Model.decreaseTokens(email1, 0.4);
+            await Model.decreaseTokens(email2, 0.4);
+            await Model.setUserState(email1, true);
+            await Model.setUserState(email2, true);
         } else {
-            throw new Error();
+            await Model.decreaseTokens(email1, 0.4);
+            await Model.decreaseTokens(email2, 0.4);
+            await Model.decreaseTokens(email3, 0.4);
+            await Model.setUserState(email1, true);
+            await Model.setUserState(email2, true);
+            await Model.setUserState(email3, true);
         }
+    
+        const successFactory = new SuccessFactory();
+        const success = successFactory.getSuccess(SuccessEnum.GameCreated);
+        res.status(success.getStatus()).json({
+            message: success.getMsg(),
+            id_game: game.id,
+            player1: game.player1,
+            player2: game.player2,
+            player3: game.player3,
+            ia: game.ia
+        });   
     } catch(error) {
         generateControllerErrors(ErrorEnum.InternalServer, error, res);
     }
@@ -666,8 +661,8 @@ export async function makeMoveVsIA(body: any, game: any, res: any): Promise<void
 /**
  * Funzione che restituisce lo stato di una partita, dato il suo id.
  */
- export async function showGameState(body: any, res: any): Promise<void> {
-    const id_game: number = body.id_game;
+ export async function showGameState(params: any, res: any): Promise<void> {
+    const id_game: number = params.id_game;
 
     try {
         let game: any = await Model.getGameById(id_game);
@@ -703,9 +698,9 @@ export async function makeMoveVsIA(body: any, game: any, res: any): Promise<void
  * Funzione che restituisce le mosse di una partita e genera o meno un file .csv a seconda delle richieste
  * dell'utente.
  */
- export async function showGameMoves(body: any, res: any): Promise<void> {
+ export async function showGameMoves(req: any, res: any): Promise<void> {
     try {
-        let moves: any[] = await Model.getMovesFromGame(body.id_game);
+        let moves: any[] = await Model.getMovesFromGame(req.params.id_game);
 
         let moves_array: Move[] = [];
         for(let i = 0; i < moves.length; i++) {
@@ -721,7 +716,7 @@ export async function makeMoveVsIA(body: any, game: any, res: any): Promise<void
         }
 
         //Stampo il file csv se specificato
-        if(body.csv === true) {
+        if(req.query.csv === 'true') {
             let csv_file: string = `ID; ID_GAME; ATTACCANTE; DIFENSORE; X; Y; COLPITA_NAVE\n`;
             for(let i = 0; i < moves_array.length; i++) {
                 csv_file += `${moves_array[i].id}; ${moves_array[i].id_game}; ${moves_array[i].attaccante}; ${moves_array[i].difensore}; ${moves_array[i].x}; ${moves_array[i].y}; ${moves_array[i].colpita_nave}\n`;
@@ -733,7 +728,7 @@ export async function makeMoveVsIA(body: any, game: any, res: any): Promise<void
         const success = successFactory.getSuccess(SuccessEnum.GameMovesShown);
         res.status(success.getStatus()).json({
             message: success.getMsg(),
-            id_game: body.id_game,
+            id_game: req.params.id_game,
             moves: moves_array
         });
     } catch (error) {
@@ -745,11 +740,11 @@ export async function makeMoveVsIA(body: any, game: any, res: any): Promise<void
 /**
  * Funzione che restituisce le statistiche di un determinato giocatore, riferite ad un intervallo di tempo.
  */
- export async function showPlayerStats(body: any, res: any): Promise<void> {
+ export async function showPlayerStats(req: any, res: any): Promise<void> {
     try {
-        let games: any[] = await Model.getPlayerGames(body.email);
-        let data_inizio: Date = new Date(body.data_inizio);
-        let data_fine: Date = new Date(body.data_fine);
+        let games: any[] = await Model.getPlayerGames(req.params.email);
+        let data_inizio: Date = new Date(req.query.data_inizio);
+        let data_fine: Date = new Date(req.query.data_fine);
 
         //Partite totali (terminate e in corso)
         let partite_totali: Game[] = [];
@@ -785,7 +780,7 @@ export async function makeMoveVsIA(body: any, game: any, res: any): Promise<void
             const success = successFactory.getSuccess(SuccessEnum.PlayerStatsShown);
             res.status(success.getStatus()).json({
                 message: success.getMsg(),
-                player: body.email,
+                player: req.params.email,
                 partite_giocate: partite_giocate.length,
                 partite_vinte: 0,
                 partite_perse: 0,
@@ -796,14 +791,14 @@ export async function makeMoveVsIA(body: any, game: any, res: any): Promise<void
             });
         } else {
             //Trovo le partite vinte
-            let partite_vinte: Game[] = partite_giocate.filter(element => element.vincitore === body.email);
+            let partite_vinte: Game[] = partite_giocate.filter(element => element.vincitore === req.params.email);
         
             //Trovo le partite perse
             let partite_perse: Game[] = partite_giocate.filter(element => 
-                (element.perdente1 === body.email) || (element.perdente2 === body.email));
+                (element.perdente1 === req.params.email) || (element.perdente2 === req.params.email));
         
             //Mosse effettuate dal giocatore
-            let moves: any[] = await Model.getPlayerMoves(body.email);
+            let moves: any[] = await Model.getPlayerMoves(req.params.email);
             let moves_array: Move[] = [];
 
             for(let i = 0; i < moves.length; i++) {
@@ -843,7 +838,7 @@ export async function makeMoveVsIA(body: any, game: any, res: any): Promise<void
             const success = successFactory.getSuccess(SuccessEnum.PlayerStatsShown);
             res.status(success.getStatus()).json({
                 message: success.getMsg(),
-                player: body.email,
+                player: req.params.email,
                 partite_giocate: partite_giocate.length,
                 partite_vinte: partite_vinte.length,
                 partite_perse: partite_perse.length,
@@ -949,6 +944,27 @@ export async function makeMoveVsIA(body: any, game: any, res: any): Promise<void
             leaderboard: players_array
         });
     } catch (e) {
+        generateControllerErrors(ErrorEnum.InternalServer, e, res);
+    }
+}
+
+/**
+ * Funzione che ricarica i token di un utente.
+ */
+export async function refillTokens(req: any, res: any) {
+    try {
+        await Model.refillTokens(req.body.email, req.body.tokens);
+
+        let new_tokens: number = await Model.getUserTokens(req.body.email);
+
+        const successFactory = new SuccessFactory();
+        const success = successFactory.getSuccess(SuccessEnum.RefillDone);
+        res.status(success.getStatus()).json({
+            message: success.getMsg(),
+            email: req.body.email,
+            new_tokens: new_tokens
+        });
+    } catch(e) {
         generateControllerErrors(ErrorEnum.InternalServer, e, res);
     }
 }

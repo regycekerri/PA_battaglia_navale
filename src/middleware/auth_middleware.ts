@@ -1,6 +1,7 @@
 require('dotenv').config();
 import { ErrorEnum } from "../responses/error";
 import * as jwt from 'jsonwebtoken';
+import { checkIfAdmin, checkIfUserExists } from "../models/model";
 
 /**
  * Verifica che la richiesta HTTP abbia un Authorization Header.
@@ -31,9 +32,10 @@ import * as jwt from 'jsonwebtoken';
 }
 
 /**
- * Verifica che il JWT contenga una chiave che corrisponda alla chiave segreta salvata nel file .env
+ * Verifica che il JWT contenga una chiave che corrisponda alla chiave segreta salvata nel file .env e che il richiedente
+ * sia un utente.
  */
- export function verifyAndAuthenticate(req: any, res: any, next: any): void{
+ export function verifySecretKey(req: any, res: any, next: any): void{
     try {
         let decoded = jwt.verify(req.token, process.env.SECRET_KEY);
         if (decoded !== null) {
@@ -43,5 +45,39 @@ import * as jwt from 'jsonwebtoken';
         }
     } catch (e) { 
         next(ErrorEnum.InvalidToken); 
+    }
+}
+
+/**
+ * Verifica che nel JWT il richiedente sia un utente.
+ */
+ export async function authenticateUser(req: any, res: any, next: any): Promise<void>{
+    try {
+        let decoded = JSON.parse(JSON.stringify(jwt.decode(req.token)));
+        let authenticated: boolean = await checkIfUserExists(decoded.richiedente);
+        if (authenticated) {
+            next();
+        } else {
+            next(ErrorEnum.NotAuthenticated);
+        }
+    } catch (e) { 
+        next(ErrorEnum.InternalServer); 
+    }
+}
+
+/**
+ * Verifica che nel JWT il richiedente sia l'admin.
+ */
+ export async function authenticateAdmin(req: any, res: any, next: any): Promise<void>{
+    try {
+        let decoded = JSON.parse(JSON.stringify(jwt.decode(req.token)));
+        let authenticated: boolean = await checkIfAdmin(decoded.richiedente);
+        if (authenticated) {
+            next();
+        } else {
+            next(ErrorEnum.NotAuthenticated);
+        }
+    } catch (e) { 
+        next(ErrorEnum.InternalServer); 
     }
 }

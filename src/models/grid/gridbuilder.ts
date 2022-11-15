@@ -68,7 +68,6 @@ export class GridBuilder {
         let doable: boolean;
 
         do {
-            console.log("1");
             doable = true;
             x = getRandomInt(0, this.grid_size - 1);
             y = getRandomInt(0, this.grid_size - 1);

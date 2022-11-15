@@ -315,3 +315,25 @@ export async function getMovesFromGame(id_game: any): Promise<any> {
 
     return games;
 }
+
+/**
+ * Funzione che verifica se l'utente specificato è l'admin.
+ */
+ export async function checkIfAdmin(email: string): Promise<boolean> {
+    let user: any = await User.findByPk(email, {raw: true});
+    
+    if(user !== null || user !== undefined) {
+        return user.role === 'admin';
+    } else {
+        return false;
+    }
+}
+
+/**
+ * Funzione che ricarica i token dell'utente della quantità specificata.
+ */
+ export async function refillTokens(email: string, refill: number): Promise<void> {
+    let user: any = await User.findByPk(email);
+    user.token = user.token + refill;
+    await user.save();
+}

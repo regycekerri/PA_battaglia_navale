@@ -32,7 +32,16 @@ class InvalidTokenError implements ErrorI {
         return 403;
     }
     getMsg(): string {
-        return "Forbidden - Invalid JWT (the key is incorrect)"
+        return "Forbidden - Invalid JWT (the key is incorrect)";
+    }
+}
+
+class NotAuthenticatedError implements ErrorI {
+    getStatus(): number {
+        return 401;
+    }
+    getMsg(): string {
+        return "Unauthorized - The user making the request was not authenticated";
     }
 }
 
@@ -234,10 +243,21 @@ class InvalidByError implements ErrorI {
     }
 }
 
+class InvalidTokensError implements ErrorI {
+    getStatus(): number {
+        return 400;
+    }
+    getMsg(): string {
+        return "Bad Request - Tokens must be specified and have to be a double between 0 and 100";
+    }
+}
+
+
 export enum ErrorEnum {
     NoAuthHeader,
     NoToken,
     InvalidToken,
+    NotAuthenticated,
     InvalidGameMode,
     InvalidNumberOfEmails,
     InvalidGridSize,
@@ -259,7 +279,8 @@ export enum ErrorEnum {
     InvalidEmail,
     InvalidDates,
     InvalidOrder,
-    InvalidBy
+    InvalidBy,
+    InvalidTokens
 }
 
 /**
@@ -279,6 +300,9 @@ export class ErrorFactory {
                 break;
             case(ErrorEnum.InvalidToken):
                 error = new InvalidTokenError();
+                break;
+            case(ErrorEnum.NotAuthenticated):
+                error = new NotAuthenticatedError();
                 break;
             case(ErrorEnum.InvalidGameMode):
                 error = new InvalidGameModeError();
@@ -345,6 +369,9 @@ export class ErrorFactory {
                 break;
             case(ErrorEnum.InvalidBy):
                 error = new InvalidByError();
+                break;
+            case(ErrorEnum.InvalidTokens):
+                error = new InvalidTokensError();
                 break;
         }
 
