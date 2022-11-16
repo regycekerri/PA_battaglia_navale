@@ -505,7 +505,7 @@ Nella seguente cartella [middleware](https://github.com/regycekerri/PA_battaglia
 
 Il Factory Method fa parte dei Creational Design Pattern e fornisce un'interfaccia per la creazione di oggetti in una superclasse, concedendo però alle sottoclassi la possibilità di alterare il tipo di oggetti che saranno creati.
 
-Il pattern risulta particolarmente utile nelle situazioni in cui sono necessarie molteplici classi implementanti un'interfaccia comune, come ad esempio nella generazione degli oggetti rappresentati gli errori e i successi restituiti in risposta alla richieste effettuate verso l'applicazione. Infatti, tali oggetti sono accumunati dal fatto di restituire un HTTP status code e il messaggio da visualizzare nella risposta.
+Il pattern risulta particolarmente utile nelle situazioni in cui sono necessarie molteplici classi implementanti un'interfaccia comune, come ad esempio nella generazione degli oggetti rappresentanti gli errori e i successi restituiti in risposta alle richieste effettuate verso l'applicazione. Infatti, tali oggetti sono accumunati dal fatto di restituire un HTTP status code e il messaggio da visualizzare nella risposta.
 
 Nella seguente cartella [responses](https://github.com/regycekerri/PA_battaglia_navale/tree/main/src/responses) è possibile osservare l'implementazione del pattern.
 
@@ -547,7 +547,7 @@ L'avvio del sistema prevede l'utilizzo di [docker](https://www.docker.com/produc
 
 Il sistema si può avviare attraverso docker dopo aver effettuato la clone dell'attuale [repository](https://github.com/regycekerri/PA_battaglia_navale) sulla propria macchina locale.
 
-Dopo aver fatto ciò, tramite il prompt dei comandi, bisogna collocarsi all'interno della cartella, avviare docker ed eseguire il comando ```docker-compose up``` . Il back-end, generato da Docker attraverso due container rispettivamente eseguiti a partite da un'immagine Node.js e da un'immagine MySQL, sarà in ascolto alle porte 8080 (per quanto riguarda Node) e 3305 (per quanto riguarda il db).
+Dopo aver fatto ciò, tramite il prompt dei comandi, bisogna collocarsi all'interno della cartella, avviare docker ed eseguire il comando ```docker-compose up``` . Il back-end, generato da Docker attraverso due container rispettivamente eseguiti a partite da un'immagine Node.js e da un'immagine MySQL, sarà in ascolto alle porte 8080 (per quanto riguarda Node) e 3306 (per quanto riguarda il db).
 
 Il client si interfaccerà con il servizio tramite postman, effettuando le chiamate desiderate.
 
