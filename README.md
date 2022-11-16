@@ -15,10 +15,11 @@
     1. [Use Case Diagram](#casi)
     2. [Sequence Diagram](#sequenze)
 5. [Pattern utilizzati](#pattern)
-    1. [Chain of Responsability](#cor)
-    2. [Factory](#factory)
+    1. [Chain of Responsibility](#cor)
+    2. [Factory Method](#factory)
     3. [Singleton](#singleton)
     4. [Builder](#builder)
+    5. [Model-View-Controller](#mvc)
 6. [Avvio tramite docker](#docker)
 7. [Software utilizzati](#software)
 8. [Autori](#autori)
@@ -90,7 +91,7 @@ In caso di richiesta andata a buon fine si ottiene una risposta della seguente t
   "message": "Created - Game created successfully!,
   "id_game": 8,
   "player1": "regy.cekerri@gmail.com",
-  "player2": "davide.malatesta99@gmail.com",
+  "player2": "davide.malatesta@gmail.com",
   "player3": "",
   "ia": false
 }
@@ -116,12 +117,12 @@ Il body deve possedere la seguente struttura, in cui il richiedente corrisponde 
 ```
 Per quanto riguarda i parametri: 
 * l'id della partita deve essere un numero intero;
-* x e y corrispondono rispettivamente alla riga e alla colonna della cella da attaccare;
+* x e y corrispondono rispettivamente alla riga e alla colonna della cella da attaccare.
 
 Inoltre, devono essere rispettati i seguenti vincoli:
 * l'id della partita deve corrispondere ad una partita effettivamente esistente e ancora in corso;
 * il richiedente può attaccare soltanto se è il suo turno;
-* la cella da attaccare deve esistere e non deve essere già stata attaccata;
+* la cella da attaccare deve esistere e non deve essere già stata attaccata.
 
 In caso di richiesta andata a buon fine si ottiene una risposta della seguente tipologia:
 ```
@@ -430,7 +431,7 @@ Il body deve possedere la seguente struttura:
 ```
 Per quanto riguarda i parametri: 
 * l'email deve corrispondere ad un giocatore esistente;
-* il numero di tokens deve essere compreso tra 0 e 100;
+* il numero di tokens deve essere compreso tra 0 e 100.
 
 In caso di richiesta andata a buon fine si ottiene una risposta della seguente tipologia:
 ```
@@ -488,31 +489,55 @@ In caso di richiesta andata a buon fine si ottiene una risposta della seguente t
 
 ## Pattern utilizzati <a name="pattern"></a>
 
-### Chain of Responsability (CoR) <a name="cor"></a>
+### Chain of Responsibility (CoR) <a name="cor"></a>
 
-La CoR fa parte dei Behavioural Design Pattern e permette di processare una richiesta attraverso l'esecuzione di una catena di funzioni collegate tra loro (handler). Tale pattern è stato realizzato tramite le funzionalità dei middleware, i quali rappresentano gli elementi effettivi della catena. In particolare, dopo aver effettuato una richiesta, si eseguono in cascata tutti i middleware relativi ad essa e, in caso di successo, la chiamata viene portata a termine.
-L'utilizzo di questa catena fa si che ogni handler effettui un singolo controllo e che trasmetta la richiesta al successivo handler in caso di successo. In questo modo il codice è semplificato e si risparmia del tempo nella validazione: nel caso in cui un controllo non vada a buon fine viene immediatamente lanciato un errore evitando i controlli successivi.
+La Chain of Responsibility fa parte dei Behavioral Design Pattern e consente di processare una richiesta attraverso una catena di handler. Alla ricezione della richiesta, ciascun handler decide se processarla o se passarla al prossimo handler della catena.
 
-L'implentazione degli handler è visualizzabile nella seguente cartella [middleware](https://github.com/regycekerri/PA_battaglia_navale/tree/main/src/middleware).
+Tale pattern è particolarmente utile nelle situazioni in cui si desidera implementare un meccanismo di validazione e autenticazione delle richieste, esattamente come quello di cui necessita la nostra applicazione. Non utilizzare il pattern significa inserire tutta la logica di autenticazione e validazione in un'unica classe, costringendo l'applicazione ad effettuare molto spesso dei controlli superflui. Il pattern, separando la logica di autenticazione e validazione in più step, consente di interrompere la richiesta già al primo errore riscontrato, evitando uno spreco di tempo e di risorse.
+
+Nel progetto, il pattern è stato utilizzato per realizzare il meccanismo di autenticazione, per le richieste in cui è previsto, e il meccanismo di validazione, per verificare che una richiesta sia effettivamente ben formata e con i parametri corretti. L'utilizzo del pattern migliora anche la scalabilità e la manutenibilità del codice (aggiungere un controllo aggiuntivo diventa infatti decisamente più semplice).
+
+Nella seguente cartella [middleware](https://github.com/regycekerri/PA_battaglia_navale/tree/main/src/middleware) è possibile osservare l'implementazione del pattern.
 
 *** 
 
 ### Factory Method<a name="factory"></a>
 
-Il Factory Method fa parte dei Creational Design Pattern e fornisce un'interfaccia per la creazione di oggetti lasciando che le sotto classi decidano quale oggetto istanziare.
-L'implementazione del pattern è visionabile nella cartella [responses](https://github.com/regycekerri/PA_battaglia_navale/tree/main/src/responses) ed è stato utilizzato per la creazione di oggetti che descrivono errori e successi del servizio, essendo entrambi accumunati dalla medesima struttura: status code (codice di stato HTTP) e messaggio da visualizzare nella risposta.
+Il Factory Method fa parte dei Creational Design Pattern e fornisce un'interfaccia per la creazione di oggetti in una superclasse, concedendo però alle sottoclassi la possibilità di alterare il tipo di oggetti che saranno creati.
+
+Il pattern risulta particolarmente utile nelle situazioni in cui sono necessarie molteplici classi implementanti un'interfaccia comune, come ad esempio nella generazione degli oggetti rappresentati gli errori e i successi restituiti in risposta alla richieste effettuate verso l'applicazione. Infatti, tali oggetti sono accumunati dal fatto di restituire un HTTP status code e il messaggio da visualizzare nella risposta.
+
+Nella seguente cartella [responses](https://github.com/regycekerri/PA_battaglia_navale/tree/main/src/responses) è possibile osservare l'implementazione del pattern.
 
 ***
 
 ### Singleton <a name="singleton"></a>
 
-Il Singleton, facente parte dei Creational Design Pattern, ha come obiettivo quello di rendere una classe istanziabile solo una volta fornendo un punto di accesso globale a tale istanza. Tale pattern, implementato nel file [database](https://github.com/regycekerri/PA_battaglia_navale/blob/main/src/models/database.ts) attraverso la libreria sequelize, è stato utilizzato per stabilire un'unica connessione con il database. In particolare se la connessione non è stata già creata, viene creata, altrimenti viene restituita la connessione già esistente. In questo modo si ha la certezza di lavorare sulla medesima istanza.
+Il Singleton è un Creational Design Pattern che consente ad una classe di possedere un'unica istanza, fornendo un punto di accesso globale a tale istanza.
+
+Tale pattern risulta ad esempio particolarmente utile nell'instaurazione di una connessione ad un database (nel nostro caso si è sfruttata la libreria sequelize). La connessione ad un database può infatti necessitare di tempo e risorse, perciò è insensato instaurarne una nuova ogni qualvolta se ne ha bisogno. Il pattern consente quindi di inizializzare una connessione una prima volta e di impedire che ne venga creata una nuova in seguito (manipolando l'accesso al costruttore della classe). Un tentativo di creare una nuova connessione restituisce infatti l'istanza già esistente.
+
+Nel seguente file [database.ts](https://github.com/regycekerri/PA_battaglia_navale/blob/main/src/models/database.ts) è possibile osservare l'implementazione del pattern.
 
 ***
 
 ### Builder <a name="builder"></a>
 
-Il Builder fa parte dei Creational Design Pattern e consente di creare oggetti complessi passo per passo. In altre parole, consente di produrre differenti tipi e rappresentazioni di oggetti, utilizzando lo stesso codice di costruzione. L'implementazione di tale pattern è visionabile nella cartella [grid](https://github.com/regycekerri/PA_battaglia_navale/tree/main/src/models/grid) infatti è stato utilizzato per la costruzione della griglia dei giocatori specifando i parametri in ingresso.
+Il Builder è un Creational Design Pattern che consente di creare oggetti complessi passo per passo. Il pattern consente dunque di produrre differenti tipi e rappresentazioni di un oggetto utilizzando lo stesso codice di costruzione.
+
+Nel nostro caso, il pattern è stato utilizzato per creare un meccanismo più efficace per creare una griglia di una partita. Ciascuna griglia condivide infatti il fatto di avere una dimensione, un numero di navi, una dimensione massima delle navi consentita e un insieme di celle. Ognuna è però diversa nel modo in cui tali parametri vengono utilizzati all'atto della creazione. Risulta dunque particolarmente saggio creare una classe, chiamata builder, capace di creare una griglia sulla base delle specifiche che le vengono fornite. In questo modo è possibile astrarre la costruzione della griglia dall'utilizzo successivo della griglia stessa.
+
+Nella seguente cartella [grid](https://github.com/regycekerri/PA_battaglia_navale/tree/main/src/models/grid) è possibile osservare l'implementazione del pattern.
+
+***
+### Model-View-Controller <a name="mvc"></a>
+
+Il Model-View-Controller (MVC) è un modello di architettura del software. Esso prevede un'architettura composta da tre parti diverse: i dati (Model), la visualizzazione dei dati (View) e la gestione degli input (Controller). Questi tre componenti sono interconnessi: il Model viene mostrato tramite la View all'utente, il quale produce gli input con cui il Controller aggiorna il Model.
+Mantenerli logicamente separati però ha grandi vantaggi nella gestione del codice, infatti questo pattern favorisce lo sviluppo, il test e la manutenzione di ciascuna parte indipendentemente dall'altra.
+
+Nel nostro caso, trattandosi il progetto di un back-end, non è stato utilizzato effettivamente tale pattern, ma ne sono stati presi alcuni punti come riferimento. Un back-end infatti è privo di un'interfaccia, e quindi è necessariamente assente il Model. Tuttavia è possibile separare la logica di gestione delle richieste dalla logica di gestione dei dati, attraverso un Model e un Controller ben distinti.
+
+Nel progetto, nel suo complesso, è possibile osservare l'implementazione del pattern.
 
 ***
 
@@ -520,13 +545,11 @@ Il Builder fa parte dei Creational Design Pattern e consente di creare oggetti c
 
 L'avvio del sistema prevede l'utilizzo di [docker](https://www.docker.com/products/docker-desktop/) e un API testing come [postman](https://www.postman.com/downloads/) per effetture le chiamate per testare il progetto.
 
-Il sistema si può avviare tramite docker-compose dopo aver effettuato la clone dell'attuale [repository](https://github.com/regycekerri/PA_battaglia_navale) sulla propria macchina locale.
+Il sistema si può avviare attraverso docker dopo aver effettuato la clone dell'attuale [repository](https://github.com/regycekerri/PA_battaglia_navale) sulla propria macchina locale.
 
-Dopo aver fatto ciò, tramite il prompt dei comandi, bisogna collocarsi all'interno della cartella, avviare docker ed eseguire il comando ```docker-compose up``` .
+Dopo aver fatto ciò, tramite il prompt dei comandi, bisogna collocarsi all'interno della cartella, avviare docker ed eseguire il comando ```docker-compose up``` . Il back-end, generato da Docker attraverso due container rispettivamente eseguiti a partite da un'immagine Node.js e da un'immagine MySQL, sarà in ascolto alle porte 8080 (per quanto riguarda Node) e 3305 (per quanto riguarda il db).
 
-Il client si interfaccerà con il servizio tramite postman che sarà in ascolto sulla porta 8080 di un webserver generato da Docker, il quale comporrà due container, rispettivamente eseguiti a partire da un'immagine Node.js e da un'immagine MySQL.
-
-Prima di avviare il servizio è necessario memorizzarare la chiava privata da usare lato back-end in un file ```.env``` all'interno della cartella scaricata.
+Il client si interfaccerà con il servizio tramite postman, effettuando le chiamate desiderate.
 
 ***
 
