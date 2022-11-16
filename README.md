@@ -535,7 +535,7 @@ Nella seguente cartella [grid](https://github.com/regycekerri/PA_battaglia_naval
 Il Model-View-Controller (MVC) è un modello di architettura del software. Esso prevede un'architettura composta da tre parti diverse: i dati (Model), la visualizzazione dei dati (View) e la gestione degli input (Controller). Questi tre componenti sono interconnessi: il Model viene mostrato tramite la View all'utente, il quale produce gli input con cui il Controller aggiorna il Model.
 Mantenerli logicamente separati però ha grandi vantaggi nella gestione del codice, infatti questo pattern favorisce lo sviluppo, il test e la manutenzione di ciascuna parte indipendentemente dall'altra.
 
-Nel nostro caso, trattandosi il progetto di un back-end, non è stato utilizzato effettivamente tale pattern, ma ne sono stati presi alcuni punti come riferimento. Un back-end infatti è privo di un'interfaccia, e quindi è necessariamente assente il Model. Tuttavia è possibile separare la logica di gestione delle richieste dalla logica di gestione dei dati, attraverso un Model e un Controller ben distinti.
+Nel nostro caso, trattandosi il progetto di un back-end, non è stato utilizzato effettivamente tale pattern, ma ne sono stati presi alcuni punti come riferimento. Un back-end infatti è privo di un'interfaccia, e quindi è necessariamente assente la View. Tuttavia è possibile separare la logica di gestione delle richieste dalla logica di gestione dei dati, attraverso un Model e un Controller ben distinti.
 
 Nel progetto, nel suo complesso, è possibile osservare l'implementazione del pattern.
 
